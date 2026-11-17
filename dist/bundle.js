@@ -75,6 +75,17 @@
     }
   });
 
+  // sdk/src/components/ScrollView.ts
+  function ScrollView(props) {
+    return createVNode("ScrollView", props, props.children ?? []);
+  }
+  var init_ScrollView = __esm({
+    "sdk/src/components/ScrollView.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
   // sdk/src/core/renderer.ts
   function getCallbacks() {
     if (!globalThis.__vormirCallbacks) {
@@ -146,6 +157,7 @@
       init_Text();
       init_Button();
       init_Border();
+      init_ScrollView();
       init_vnode();
       init_renderer();
     }
@@ -163,21 +175,19 @@
           location: "center-screen",
           children: [
             Stack({
-              orientation: "horizontal",
               children: [
-                Stack({
-                  width: 200,
-                  children: [Text({ text: "Sidebar" })]
-                }),
-                Stack({
-                  flex: 2,
-                  background: "#eeeeee",
-                  children: [Text({ text: "Konten utama" })]
-                }),
-                Stack({
-                  width: 10,
-                  background: "#dddddd",
-                  children: [Text({ text: "Konten kedua" })]
+                ScrollView({
+                  vertical: true,
+                  horizontal: false,
+                  height: 100,
+                  children: [
+                    Stack({
+                      spacing: 10,
+                      children: Array.from({ length: 100 }).map(
+                        (_, i) => Text({ text: `Item ${i + 1}` })
+                      )
+                    })
+                  ]
                 })
               ]
             })

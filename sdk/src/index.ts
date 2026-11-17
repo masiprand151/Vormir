@@ -6,6 +6,7 @@ export { Stack } from "./components/Stack";
 export { Text } from "./components/Text";
 export { Button } from "./components/Button";
 export { Border } from "./components/Border";
+export { ScrollView } from "./components/ScrollView";
 
 // Core
 export { createVNode } from "./core/vnode";
@@ -16,6 +17,7 @@ export type {
   Color,
   Thickness,
   WindowPosition,
+  ScrollViewProps,
   FontWeight,
   Alignment,
   Orientation,

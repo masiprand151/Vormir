@@ -78,6 +78,13 @@ export interface StackProps extends BaseProps {
   children?: VNodeChild[];
 }
 
+// ScrollView
+export interface ScrollViewProps extends BaseProps {
+  vertical?: boolean;
+  horizontal?: boolean;
+  children?: VNodeChild[];
+}
+
 // Text
 export interface TextProps extends BaseProps {
   text: string;

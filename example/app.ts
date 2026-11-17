@@ -1,4 +1,4 @@
-import { Window, Stack, Text, Button, runApp } from "@vormir/sdk";
+import { Window, Stack, Text, Button, runApp, ScrollView } from "@vormir/sdk";
 
 function Main() {
   return Window({
@@ -6,27 +6,21 @@ function Main() {
     width: 800,
     height: 600,
     location: "center-screen",
-
     children: [
       Stack({
-        orientation: "horizontal",
-
         children: [
-          Stack({
-            width: 200,
-            children: [Text({ text: "Sidebar" })],
-          }),
-
-          Stack({
-            flex: 2,
-            background: "#eeeeee",
-            children: [Text({ text: "Konten utama" })],
-          }),
-
-          Stack({
-            width: 10,
-            background: "#dddddd",
-            children: [Text({ text: "Konten kedua" })],
+          ScrollView({
+            vertical: true,
+            horizontal: false,
+            height: 100,
+            children: [
+              Stack({
+                spacing: 10,
+                children: Array.from({ length: 100 }).map((_, i) =>
+                  Text({ text: `Item ${i + 1}` }),
+                ),
+              }),
+            ],
           }),
         ],
       }),

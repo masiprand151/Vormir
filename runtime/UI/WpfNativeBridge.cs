@@ -148,13 +148,108 @@ public sealed class WpfNativeBridge
       "Text" => BuildText(props),
       "Button" => BuildButton(props),
       "Border" => BuildBorder(props, children),
-
+      "ScrollView" => BuildScrollView(props, children),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
         Foreground = Brushes.Red
       }
     };
+  }
+
+  private FrameworkElement BuildScrollView(
+    JsonElement props,
+    JsonElement children)
+  {
+    bool vertical =
+        GetBoolean(props, "vertical") ?? false;
+
+    bool horizontal =
+        GetBoolean(props, "horizontal") ?? false;
+
+    // ScrollViewer hanya menerima satu Content.
+    // Jika ada beberapa children, bungkus dalam StackPanel.
+    FrameworkElement content;
+
+    if (children.ValueKind == JsonValueKind.Array &&
+        children.GetArrayLength() == 1)
+    {
+      content = BuildElement(children[0]);
+    }
+    else
+    {
+      var stack = new StackPanel
+      {
+        Orientation = Orientation.Vertical
+      };
+
+      if (children.ValueKind == JsonValueKind.Array)
+      {
+        foreach (JsonElement child in children.EnumerateArray())
+        {
+          stack.Children.Add(BuildElement(child));
+        }
+      }
+
+      content = stack;
+    }
+
+    var scrollViewer = new ScrollViewer
+    {
+      Content = content,
+
+      VerticalScrollBarVisibility = vertical
+            ? ScrollBarVisibility.Auto
+            : ScrollBarVisibility.Disabled,
+
+      HorizontalScrollBarVisibility = horizontal
+            ? ScrollBarVisibility.Auto
+            : ScrollBarVisibility.Disabled,
+
+      CanContentScroll = false,
+
+      Padding =
+            ParseOptionalThickness(props, "padding")
+            ?? new Thickness(0),
+
+      Margin =
+            ParseOptionalThickness(props, "margin")
+            ?? new Thickness(0),
+
+      Background = ParseBrush(
+            GetString(props, "background") ?? "Transparent"
+        )
+    };
+
+    // Width
+    double? width = GetNumber(props, "width");
+
+    if (width.HasValue)
+      scrollViewer.Width = width.Value;
+
+    // Height
+    double? height = GetNumber(props, "height");
+
+    if (height.HasValue)
+      scrollViewer.Height = height.Value;
+
+    // Enabled
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+
+    if (isEnabled.HasValue)
+      scrollViewer.IsEnabled = isEnabled.Value;
+
+    // Visibility
+    bool? visible = GetBoolean(props, "visible");
+
+    if (visible.HasValue)
+    {
+      scrollViewer.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return scrollViewer;
   }
 
   private FrameworkElement BuildStack(
