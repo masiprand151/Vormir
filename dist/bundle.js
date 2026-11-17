@@ -25,6 +25,9 @@
 
   // sdk/src/components/Window.ts
   function Window(props) {
+    if (typeof props.location === "object" && props.location.x === 0) {
+      props.location.offsetX = -7;
+    }
     return createVNode("Window", props, props.children ?? []);
   }
   var init_Window = __esm({
@@ -163,8 +166,11 @@
           title: "Vormir App",
           width: 800,
           height: 600,
-          background: "#f5f7fa",
-          location: "center-screen",
+          background: "#216de0",
+          location: {
+            x: 0,
+            y: 0
+          },
           children: [
             Stack({
               orientation: "vertical",

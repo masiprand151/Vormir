@@ -5,8 +5,11 @@ function Main() {
     title: "Vormir App",
     width: 800,
     height: 600,
-    background: "#f5f7fa",
-    location: "center-screen",
+    background: "#216de0",
+    location: {
+      x: 0,
+      y: 0,
+    },
     children: [
       Stack({
         orientation: "vertical",

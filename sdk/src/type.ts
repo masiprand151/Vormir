@@ -46,6 +46,13 @@ export interface BaseProps extends VNodeProps {
   visible?: boolean;
 }
 
+export interface WindowPosition {
+  x: number;
+  y: number;
+  offsetX?: number;
+  offsetY?: number;
+}
+
 // Window
 export interface WindowProps extends VNodeProps {
   title?: string;
@@ -55,9 +62,10 @@ export interface WindowProps extends VNodeProps {
   minHeight?: number;
   maxWidth?: number;
   maxHeight?: number;
+  fullscreen?: boolean;
   background?: Color;
   appBar?: "none" | "threedborderwindow" | "SingleBorderWindow";
-  location?: "center-screen" | "center-owner" | "manual";
+  location?: "center-screen" | "center-owner" | WindowPosition;
   children?: VNodeChild[];
 }
 

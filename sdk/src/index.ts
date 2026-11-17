@@ -15,6 +15,7 @@ export { render, runApp } from "./core/renderer";
 export type {
   Color,
   Thickness,
+  WindowPosition,
   FontWeight,
   Alignment,
   Orientation,

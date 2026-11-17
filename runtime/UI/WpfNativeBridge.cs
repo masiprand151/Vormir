@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shell;
 
 namespace Vormir.UI;
 
@@ -57,13 +58,46 @@ public sealed class WpfNativeBridge
     if (background != null)
       _window.Background = ParseBrush(background);
 
-    string? location = GetString(props, "location");
-    if (location != null)
+    // Window Location
+    JsonElement location = GetProperty(props, "location");
+
+    if (location.ValueKind == JsonValueKind.String)
     {
-      _window.WindowStartupLocation =
-          Normalize(location) == "centerscreen"
-              ? WindowStartupLocation.CenterScreen
-              : WindowStartupLocation.Manual;
+      string? position = location.GetString();
+
+      _window.WindowStartupLocation = Normalize(position ?? "") switch
+      {
+        "centerscreen" => WindowStartupLocation.CenterScreen,
+        "centerowner" => WindowStartupLocation.CenterOwner,
+        _ => WindowStartupLocation.Manual
+      };
+    }
+    else if (location.ValueKind == JsonValueKind.Object)
+    {
+      double x = GetNumber(location, "x") ?? 0;
+      double y = GetNumber(location, "y") ?? 0;
+
+      double offsetX = GetNumber(location, "offsetX") ?? 0;
+      double offsetY = GetNumber(location, "offsetY") ?? 0;
+
+      _window.WindowStartupLocation = WindowStartupLocation.Manual;
+
+      _window.Left = x + offsetX;
+      _window.Top = y + offsetY;
+    }
+
+    // Fullscreen
+    bool? fullscreen = GetBoolean(props, "fullscreen");
+
+    if (fullscreen == true)
+    {
+      _window.WindowStyle = WindowStyle.None;
+      _window.WindowState = WindowState.Maximized;
+      _window.ResizeMode = ResizeMode.NoResize;
+    }
+    else if (fullscreen == false)
+    {
+      _window.ResizeMode = ResizeMode.CanResize;
     }
 
     string? windowState = GetString(props, "windowState");
