@@ -9,6 +9,7 @@
 
 # node
 node_modules
+dist
 
 
 # Build results
