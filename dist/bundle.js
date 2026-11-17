@@ -23,24 +23,56 @@
     }
   });
 
-  // sdk/src/controls/controls.ts
+  // sdk/src/components/Window.ts
   function Window(props) {
     return createVNode("Window", props, props.children ?? []);
   }
+  var init_Window = __esm({
+    "sdk/src/components/Window.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/Stack.ts
   function Stack(props) {
     return createVNode("Stack", props, props.children ?? []);
   }
+  var init_Stack = __esm({
+    "sdk/src/components/Stack.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/Text.ts
   function Text(props) {
     return createVNode("Text", props);
   }
+  var init_Text = __esm({
+    "sdk/src/components/Text.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/Button.ts
   function Button(props) {
     return createVNode("Button", props);
   }
+  var init_Button = __esm({
+    "sdk/src/components/Button.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/Border.ts
   function Border(props) {
     return createVNode("Border", props, props.children ?? []);
   }
-  var init_controls = __esm({
-    "sdk/src/controls/controls.ts"() {
+  var init_Border = __esm({
+    "sdk/src/components/Border.ts"() {
       "use strict";
       init_vnode();
     }
@@ -59,7 +91,7 @@
     return id;
   }
   function serializeVNode(node) {
-    if (node === null || node === void 0 || node === false) {
+    if (node === null || node === void 0 || typeof node === "boolean") {
       return null;
     }
     if (typeof node === "string" || typeof node === "number") {
@@ -70,6 +102,9 @@
         },
         children: []
       };
+    }
+    if (!("type" in node) || !("props" in node)) {
+      return null;
     }
     const props = {};
     for (const [key, value] of Object.entries(node.props ?? {})) {
@@ -105,58 +140,17 @@
     }
   });
 
-  // sdk/src/components/Window.ts
-  var init_Window = __esm({
-    "sdk/src/components/Window.ts"() {
-      "use strict";
-      init_vnode();
-    }
-  });
-
-  // sdk/src/components/Stack.ts
-  var init_Stack = __esm({
-    "sdk/src/components/Stack.ts"() {
-      "use strict";
-      init_vnode();
-    }
-  });
-
-  // sdk/src/components/Text.ts
-  var init_Text = __esm({
-    "sdk/src/components/Text.ts"() {
-      "use strict";
-      init_vnode();
-    }
-  });
-
-  // sdk/src/components/Button.ts
-  var init_Button = __esm({
-    "sdk/src/components/Button.ts"() {
-      "use strict";
-      init_vnode();
-    }
-  });
-
-  // sdk/src/components/Border.ts
-  var init_Border = __esm({
-    "sdk/src/components/Border.ts"() {
-      "use strict";
-      init_vnode();
-    }
-  });
-
   // sdk/src/index.ts
   var init_src = __esm({
     "sdk/src/index.ts"() {
       "use strict";
-      init_controls();
-      init_vnode();
-      init_renderer();
       init_Window();
       init_Stack();
       init_Text();
       init_Button();
       init_Border();
+      init_vnode();
+      init_renderer();
     }
   });
 
@@ -171,7 +165,6 @@
           height: 600,
           background: "#f5f7fa",
           location: "center-screen",
-          appBar: false,
           children: [
             Stack({
               orientation: "vertical",

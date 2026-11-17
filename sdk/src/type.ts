@@ -56,7 +56,7 @@ export interface WindowProps extends VNodeProps {
   maxWidth?: number;
   maxHeight?: number;
   background?: Color;
-  appBar?: boolean;
+  appBar?: "none" | "threedborderwindow" | "SingleBorderWindow";
   location?: "center-screen" | "center-owner" | "manual";
   children?: VNodeChild[];
 }
