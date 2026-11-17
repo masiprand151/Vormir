@@ -1,0 +1,31 @@
+{
+  "name": "vormir",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Vormir Native Application Framework",
+  "bin": {
+    "vormir": "./cli/vormir.js"
+  },
+  "scripts": {
+    "dev": "node cli/vormir.js dev",
+    "build": "node cli/vormir.js build",
+    "start": "node cli/vormir.js run",
+    "clean": "node cli/vormir.js clean",
+    "help": "node cli/vormir.js help"
+  },
+  "directories": {
+    "example": "example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masiprand151/Vormir.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/masiprand151/Vormir/issues"
+  },
+  "homepage": "https://github.com/masiprand151/Vormir#readme"
+}
