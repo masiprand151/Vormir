@@ -5,6 +5,7 @@ function Main() {
     title: "Vormir App",
     width: 800,
     height: 600,
+
     background: "#f5f7fa",
     location: "center-screen",
 

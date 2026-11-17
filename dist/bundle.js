@@ -171,6 +171,7 @@
           height: 600,
           background: "#f5f7fa",
           location: "center-screen",
+          appBar: false,
           children: [
             Stack({
               orientation: "vertical",

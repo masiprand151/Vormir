@@ -1,10 +1,9 @@
-import type { VNode, VNodeChild } from "./vnode";
+import type { VNode, VNodeChild } from "../type";
 
 type VormirCallback = (...args: any[]) => any;
 
 declare global {
   var __vormirCallbacks: Record<string, VormirCallback> | undefined;
-
   var __vormirRender: ((json: string) => void) | undefined;
 }
 
@@ -26,8 +25,8 @@ function registerCallback(callback: VormirCallback): string {
   return id;
 }
 
-function serializeVNode(node: VNodeChild): any {
-  if (node === null || node === undefined || node === false) {
+function serializeVNode(node: VNodeChild): unknown {
+  if (node === null || node === undefined || typeof node === "boolean") {
     return null;
   }
 
@@ -41,7 +40,11 @@ function serializeVNode(node: VNodeChild): any {
     };
   }
 
-  const props: Record<string, any> = {};
+  if (!("type" in node) || !("props" in node)) {
+    return null;
+  }
+
+  const props: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(node.props ?? {})) {
     if (typeof value === "function") {
@@ -77,6 +80,6 @@ export function render(node: VNodeChild): void {
   globalThis.__vormirRender(JSON.stringify(tree));
 }
 
-export function runApp(app: () => VNode): void {
+export function runApp(app: () => VNodeChild): void {
   render(app());
 }

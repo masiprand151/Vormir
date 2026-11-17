@@ -23,10 +23,11 @@ public partial class App : Application
       Width = 800,
       Height = 600,
       Background = Brushes.White,
-      WindowStartupLocation = WindowStartupLocation.CenterScreen
+      WindowStartupLocation = WindowStartupLocation.CenterScreen,
     };
 
     MainWindow = window;
+
 
     var bridge = new WpfNativeBridge(
         window,

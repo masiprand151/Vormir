@@ -1,12 +1,4 @@
-export type VNodeChild = VNode | string | number | null | undefined | false;
-
-export type VNodeProps = Record<string, unknown>;
-
-export interface VNode {
-  type: string;
-  props: VNodeProps;
-  children: VNodeChild[];
-}
+import type { VNode, VNodeChild, VNodeProps } from "../type";
 
 export function createVNode(
   type: string,

@@ -77,7 +77,7 @@ public sealed class WpfNativeBridge
       };
     }
 
-    string? windowStyle = GetString(props, "windowStyle");
+    string? windowStyle = GetString(props, "appBar");
     if (windowStyle != null)
     {
       _window.WindowStyle = Normalize(windowStyle) switch
