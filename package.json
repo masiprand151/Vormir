@@ -13,8 +13,11 @@
     "clean": "node cli/vormir.js clean",
     "help": "node cli/vormir.js help"
   },
-  "directories": {
-    "example": "example"
+  "workspaces": [
+    "sdk"
+  ],
+  "dependencies": {
+    "@vormir/sdk": "0.1.0"
   },
   "repository": {
     "type": "git",

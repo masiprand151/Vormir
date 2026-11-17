@@ -1,46 +1,68 @@
-const callbacks = (globalThis as any).__vormirCallbacks;
+import { Window, Stack, Text, Button, Border, runApp } from "@vormir/sdk";
 
-callbacks["hello"] = () => {
-  console.log("Tombol berhasil diklik!");
-};
+function Main() {
+  return Window({
+    title: "Vormir App",
+    width: 800,
+    height: 600,
+    background: "#f5f7fa",
+    location: "center-screen",
 
-const tree = {
-  type: "View",
-  props: {
-    style: {
-      flexDirection: "column",
-      padding: 24,
-      gap: 12,
-    },
-  },
-  children: [
-    {
-      type: "Text",
-      props: {
-        text: "Selamat datang di Vormir!",
-        style: {
-          fontSize: 28,
-          color: "#222222",
-        },
-      },
-      children: [],
-    },
-    {
-      type: "Text",
-      props: {
-        text: "Native UI menggunakan WPF Renderer.",
-      },
-      children: [],
-    },
-    {
-      type: "Button",
-      props: {
-        title: "Klik Saya",
-        onPress: "hello",
-      },
-      children: [],
-    },
-  ],
-};
+    children: [
+      Stack({
+        orientation: "vertical",
+        margin: "20",
 
-(globalThis as any).__vormirRender(JSON.stringify(tree));
+        children: [
+          Text({
+            text: "Welcome to Vormir",
+            fontSize: 28,
+            fontWeight: "semi-bold",
+            foreground: "#222222",
+            margin: "0,0,0,12",
+          }),
+
+          Text({
+            text: "Native Desktop UI Framework",
+            fontSize: 15,
+            foreground: "#64748b",
+            margin: "0,0,0,20",
+          }),
+
+          Border({
+            background: "#ffffff",
+            brush: "#cbd5e1",
+            thickness: "1",
+            radius: "8",
+            padding: "16",
+
+            children: [
+              Stack({
+                orientation: "vertical",
+
+                children: [
+                  Text({
+                    text: "Vormir SDK",
+                    fontSize: 20,
+                    fontWeight: "semi-bold",
+                    margin: "0,0,0,12",
+                  }),
+
+                  Button({
+                    content: "Klik Saya",
+                    padding: "16,8",
+                    onClick: () => {
+                      console.log("Tombol berhasil diklik!");
+                    },
+                  }),
+                ],
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  });
+}
+
+runApp(Main);
