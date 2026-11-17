@@ -51,7 +51,7 @@ function Main() {
                   Button({
                     content: "Klik Saya",
                     padding: "16,8",
-                    onClick: () => {
+                    onPress: () => {
                       console.log("Tombol berhasil diklik!");
                     },
                   }),
