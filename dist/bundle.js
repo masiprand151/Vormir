@@ -60,9 +60,6 @@
   });
 
   // sdk/src/components/Button.ts
-  function Button(props) {
-    return createVNode("Button", props);
-  }
   var init_Button = __esm({
     "sdk/src/components/Button.ts"() {
       "use strict";
@@ -87,14 +84,19 @@
   });
 
   // sdk/src/components/Spacer.ts
-  function Spacer(props = {}) {
-    return createVNode("Spacer", {
-      ...props,
-      flex: props.flex ?? 1
-    });
-  }
   var init_Spacer = __esm({
     "sdk/src/components/Spacer.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/Divider.ts
+  function Divider(props = {}) {
+    return createVNode("Divider", props);
+  }
+  var init_Divider = __esm({
+    "sdk/src/components/Divider.ts"() {
       "use strict";
       init_vnode();
     }
@@ -173,6 +175,7 @@
       init_Border();
       init_ScrollView();
       init_Spacer();
+      init_Divider();
       init_vnode();
       init_renderer();
     }
@@ -184,17 +187,25 @@
       init_src();
       function Main() {
         return Window({
-          title: "Spacer Example",
+          title: "Divider Example",
           width: 500,
           height: 400,
           children: [
             Stack({
               orientation: "vertical",
+              spacing: 10,
               padding: 20,
               children: [
-                Text({ text: "Header" }),
-                Spacer(),
-                Button({ content: "Simpan" })
+                Text({ text: "Profil" }),
+                Divider({
+                  color: "#cccccc",
+                  thickness: 1
+                }),
+                Text({ text: "Pengaturan" }),
+                Divider({
+                  color: "#ff0000",
+                  thickness: 2
+                })
               ]
             })
           ]

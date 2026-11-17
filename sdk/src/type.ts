@@ -79,7 +79,11 @@ export interface StackProps extends BaseProps {
 }
 
 export interface SpacerProps extends BaseProps {}
-
+export interface DividerProps extends BaseProps {
+  color?: Color;
+  thickness?: number;
+  orientation?: "horizontal" | "vertical";
+}
 // ScrollView
 export interface ScrollViewProps extends BaseProps {
   vertical?: boolean;

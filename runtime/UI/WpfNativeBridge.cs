@@ -150,6 +150,7 @@ public sealed class WpfNativeBridge
       "Border" => BuildBorder(props, children),
       "Spacer" => BuildSpacer(props),
       "ScrollView" => BuildScrollView(props, children),
+      "Divider" => BuildDivider(props),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
@@ -158,6 +159,48 @@ public sealed class WpfNativeBridge
     };
   }
 
+  // Divider Handler
+  private FrameworkElement BuildDivider(JsonElement props)
+  {
+    string orientation =
+        GetString(props, "orientation") ?? "horizontal";
+
+    double thickness =
+        GetNumber(props, "thickness") ?? 1;
+
+    bool isHorizontal =
+        Normalize(orientation) == "horizontal";
+
+    var divider = new Border
+    {
+      Background = ParseBrush(
+            GetString(props, "color") ?? "#cccccc"
+        ),
+
+      Margin =
+            ParseOptionalThickness(props, "margin")
+            ?? new Thickness(0),
+
+      HorizontalAlignment = isHorizontal
+            ? HorizontalAlignment.Stretch
+            : HorizontalAlignment.Left,
+
+      VerticalAlignment = isHorizontal
+            ? VerticalAlignment.Top
+            : VerticalAlignment.Stretch
+    };
+
+    if (isHorizontal)
+    {
+      divider.Height = thickness;
+    }
+    else
+    {
+      divider.Width = thickness;
+    }
+
+    return divider;
+  }
 
   // Spacer Handler
   private FrameworkElement BuildSpacer(JsonElement props)
