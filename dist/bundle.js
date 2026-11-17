@@ -60,6 +60,9 @@
   });
 
   // sdk/src/components/Button.ts
+  function Button(props) {
+    return createVNode("Button", props);
+  }
   var init_Button = __esm({
     "sdk/src/components/Button.ts"() {
       "use strict";
@@ -76,11 +79,22 @@
   });
 
   // sdk/src/components/ScrollView.ts
-  function ScrollView(props) {
-    return createVNode("ScrollView", props, props.children ?? []);
-  }
   var init_ScrollView = __esm({
     "sdk/src/components/ScrollView.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/Spacer.ts
+  function Spacer(props = {}) {
+    return createVNode("Spacer", {
+      ...props,
+      flex: props.flex ?? 1
+    });
+  }
+  var init_Spacer = __esm({
+    "sdk/src/components/Spacer.ts"() {
       "use strict";
       init_vnode();
     }
@@ -158,6 +172,7 @@
       init_Button();
       init_Border();
       init_ScrollView();
+      init_Spacer();
       init_vnode();
       init_renderer();
     }
@@ -168,36 +183,18 @@
     "example/app.ts"() {
       init_src();
       function Main() {
-        const items = Array.from({ length: 100 }).map(
-          (_, i) => Text({ text: `Item ${i + 1}` })
-        );
         return Window({
-          title: "Vormir Stack",
-          width: 800,
-          height: 600,
-          location: "center-screen",
+          title: "Spacer Example",
+          width: 500,
+          height: 400,
           children: [
             Stack({
               orientation: "vertical",
+              padding: 20,
               children: [
-                Text({
-                  text: "Header",
-                  height: 50
-                }),
-                ScrollView({
-                  flex: 1,
-                  vertical: true,
-                  children: [
-                    Stack({
-                      spacing: 10,
-                      children: items
-                    })
-                  ]
-                }),
-                Text({
-                  text: "Footer",
-                  height: 40
-                })
+                Text({ text: "Header" }),
+                Spacer(),
+                Button({ content: "Simpan" })
               ]
             })
           ]

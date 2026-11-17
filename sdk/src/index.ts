@@ -7,6 +7,7 @@ export { Text } from "./components/Text";
 export { Button } from "./components/Button";
 export { Border } from "./components/Border";
 export { ScrollView } from "./components/ScrollView";
+export { Spacer } from "./components/Spacer";
 
 // Core
 export { createVNode } from "./core/vnode";
@@ -16,6 +17,7 @@ export { render, runApp } from "./core/renderer";
 export type {
   Color,
   Thickness,
+  SpacerProps,
   WindowPosition,
   ScrollViewProps,
   FontWeight,

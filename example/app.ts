@@ -1,38 +1,19 @@
-import { Window, Stack, Text, Button, runApp, ScrollView } from "@vormir/sdk";
+import { Window, Stack, Text, Button, Spacer, runApp } from "@vormir/sdk";
 
 function Main() {
-  const items = Array.from({ length: 100 }).map((_, i) =>
-    Text({ text: `Item ${i + 1}` }),
-  );
   return Window({
-    title: "Vormir Stack",
-    width: 800,
-    height: 600,
-    location: "center-screen",
+    title: "Spacer Example",
+    width: 500,
+    height: 400,
     children: [
       Stack({
         orientation: "vertical",
+        padding: 20,
         children: [
-          Text({
-            text: "Header",
-            height: 50,
-          }),
+          Text({ text: "Header" }),
 
-          ScrollView({
-            flex: 1,
-            vertical: true,
-            children: [
-              Stack({
-                spacing: 10,
-                children: items,
-              }),
-            ],
-          }),
-
-          Text({
-            text: "Footer",
-            height: 40,
-          }),
+          Spacer(),
+          Button({ content: "Simpan" }),
         ],
       }),
     ],

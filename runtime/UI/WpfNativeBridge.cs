@@ -148,6 +148,7 @@ public sealed class WpfNativeBridge
       "Text" => BuildText(props),
       "Button" => BuildButton(props),
       "Border" => BuildBorder(props, children),
+      "Spacer" => BuildSpacer(props),
       "ScrollView" => BuildScrollView(props, children),
       _ => new TextBlock
       {
@@ -157,6 +158,27 @@ public sealed class WpfNativeBridge
     };
   }
 
+
+  // Spacer Handler
+  private FrameworkElement BuildSpacer(JsonElement props)
+  {
+    var spacer = new Border
+    {
+      Background = Brushes.Transparent
+    };
+
+    double? width = GetNumber(props, "width");
+    if (width.HasValue)
+      spacer.Width = width.Value;
+
+    double? height = GetNumber(props, "height");
+    if (height.HasValue)
+      spacer.Height = height.Value;
+
+    return spacer;
+  }
+
+  // ScrollView Handler
   private FrameworkElement BuildScrollView(
     JsonElement props,
     JsonElement children)
