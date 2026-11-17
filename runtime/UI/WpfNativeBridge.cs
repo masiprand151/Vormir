@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shell;
+using System.Linq;
 
 namespace Vormir.UI;
 
@@ -156,9 +157,6 @@ public sealed class WpfNativeBridge
     };
   }
 
-
-
-
   private FrameworkElement BuildStack(
       JsonElement props,
       JsonElement children)
@@ -169,38 +167,140 @@ public sealed class WpfNativeBridge
     double spacing =
         GetNumber(props, "spacing") ?? 0;
 
-    var panel = new StackPanel
+    bool isHorizontal =
+        Normalize(orientation) == "horizontal";
+
+    // Panel utama
+    Panel panel = new StackPanel
     {
-      Orientation = Normalize(orientation) == "horizontal"
+      Orientation = isHorizontal
             ? Orientation.Horizontal
             : Orientation.Vertical
     };
 
-    // Children dan spacing
+    // Baca semua children
+    var childElements = new List<FrameworkElement>();
+    var flexValues = new List<double>();
+
     if (children.ValueKind == JsonValueKind.Array)
     {
-      for (int i = 0; i < children.GetArrayLength(); i++)
+      foreach (JsonElement item in children.EnumerateArray())
       {
-        FrameworkElement child = BuildElement(children[i]);
+        FrameworkElement child = BuildElement(item);
 
+        double flex = 0;
+
+        if (item.TryGetProperty("props", out JsonElement childProps))
+        {
+          flex = GetNumber(childProps, "flex") ?? 0;
+        }
+
+        childElements.Add(child);
+        flexValues.Add(Math.Max(0, flex));
+      }
+    }
+
+    // Periksa apakah ada child menggunakan flex
+    bool hasFlex = flexValues.Any(flex => flex > 0);
+
+    if (hasFlex)
+    {
+      var grid = new Grid();
+
+      // Buat kolom atau baris berdasarkan orientation
+      for (int i = 0; i < childElements.Count; i++)
+      {
+        double flex = flexValues[i];
+
+        if (isHorizontal)
+        {
+          grid.ColumnDefinitions.Add(
+              new ColumnDefinition
+              {
+                Width = flex > 0
+                      ? new GridLength(flex, GridUnitType.Star)
+                      : GridLength.Auto
+              }
+          );
+        }
+        else
+        {
+          grid.RowDefinitions.Add(
+              new RowDefinition
+              {
+                Height = flex > 0
+                      ? new GridLength(flex, GridUnitType.Star)
+                      : GridLength.Auto
+              }
+          );
+        }
+      }
+
+      // Masukkan children ke Grid
+      for (int i = 0; i < childElements.Count; i++)
+      {
+        FrameworkElement child = childElements[i];
+
+        if (isHorizontal)
+        {
+          Grid.SetColumn(child, i);
+        }
+        else
+        {
+          Grid.SetRow(child, i);
+        }
+
+        // Spacing antar item
         if (i > 0 && spacing > 0)
         {
           Thickness currentMargin = child.Margin;
 
-          child.Margin = panel.Orientation == Orientation.Vertical
+          child.Margin = isHorizontal
               ? new Thickness(
-                  currentMargin.Left,
-                  currentMargin.Top + spacing,
+                  currentMargin.Left + spacing,
+                  currentMargin.Top,
                   currentMargin.Right,
                   currentMargin.Bottom)
               : new Thickness(
-                  currentMargin.Left + spacing,
-                  currentMargin.Top,
+                  currentMargin.Left,
+                  currentMargin.Top + spacing,
                   currentMargin.Right,
                   currentMargin.Bottom);
         }
 
-        panel.Children.Add(child);
+        grid.Children.Add(child);
+      }
+
+      panel = grid;
+    }
+    else
+    {
+      // Layout biasa menggunakan StackPanel
+      var stackPanel = (StackPanel)panel;
+
+      for (int i = 0; i < childElements.Count; i++)
+      {
+        FrameworkElement child = childElements[i];
+
+        // Spacing antar item
+        if (i > 0 && spacing > 0)
+        {
+          Thickness currentMargin = child.Margin;
+
+          child.Margin = isHorizontal
+              ? new Thickness(
+                  currentMargin.Left + spacing,
+                  currentMargin.Top,
+                  currentMargin.Right,
+                  currentMargin.Bottom)
+              : new Thickness(
+                  currentMargin.Left,
+                  currentMargin.Top + spacing,
+                  currentMargin.Right,
+                  currentMargin.Bottom);
+        }
+
+        stackPanel.Children.Add(child);
       }
     }
 
@@ -208,13 +308,14 @@ public sealed class WpfNativeBridge
     var container = new Border
     {
       Child = panel,
+
       Padding =
-        ParseOptionalThickness(props, "padding")
-        ?? new Thickness(0),
+            ParseOptionalThickness(props, "padding")
+            ?? new Thickness(0),
 
       Margin =
-        ParseOptionalThickness(props, "margin")
-        ?? new Thickness(0),
+            ParseOptionalThickness(props, "margin")
+            ?? new Thickness(0),
 
       Background = ParseBrush(
             GetString(props, "background") ?? "Transparent"
@@ -251,6 +352,7 @@ public sealed class WpfNativeBridge
 
     return container;
   }
+
 
   private FrameworkElement BuildText(JsonElement props)
   {

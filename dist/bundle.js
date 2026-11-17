@@ -60,9 +60,6 @@
   });
 
   // sdk/src/components/Button.ts
-  function Button(props) {
-    return createVNode("Button", props);
-  }
   var init_Button = __esm({
     "sdk/src/components/Button.ts"() {
       "use strict";
@@ -166,13 +163,22 @@
           location: "center-screen",
           children: [
             Stack({
-              orientation: "vertical",
-              spacing: 16,
-              padding: 16,
+              orientation: "horizontal",
               children: [
-                Text({ text: "Item Pertama", fontSize: 24 }),
-                Button({ content: "Item Kedua" }),
-                Text({ text: "Item Ketiga", fontSize: 18 })
+                Stack({
+                  width: 200,
+                  children: [Text({ text: "Sidebar" })]
+                }),
+                Stack({
+                  flex: 2,
+                  background: "#eeeeee",
+                  children: [Text({ text: "Konten utama" })]
+                }),
+                Stack({
+                  width: 10,
+                  background: "#dddddd",
+                  children: [Text({ text: "Konten kedua" })]
+                })
               ]
             })
           ]
