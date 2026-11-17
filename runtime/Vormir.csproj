@@ -1,0 +1,25 @@
+﻿
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Vormir</RootNamespace>
+    <AssemblyName>Vormir</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jint" Version="4.18.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\dist\bundle.js"
+             Link="dist\bundle.js"
+             CopyToOutputDirectory="PreserveNewest"
+             Condition="Exists('..\dist\bundle.js')" />
+  </ItemGroup>
+
+</Project>
