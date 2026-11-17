@@ -156,12 +156,18 @@ public sealed class WpfNativeBridge
     };
   }
 
+
+
+
   private FrameworkElement BuildStack(
       JsonElement props,
       JsonElement children)
   {
     string orientation =
         GetString(props, "orientation") ?? "vertical";
+
+    double spacing =
+        GetNumber(props, "spacing") ?? 0;
 
     var panel = new StackPanel
     {
@@ -170,40 +176,80 @@ public sealed class WpfNativeBridge
             : Orientation.Vertical
     };
 
-    double gap = GetNumber(props, "gap") ?? 0;
-
+    // Children dan spacing
     if (children.ValueKind == JsonValueKind.Array)
     {
-      foreach (JsonElement child in children.EnumerateArray())
+      for (int i = 0; i < children.GetArrayLength(); i++)
       {
-        FrameworkElement element = BuildElement(child);
+        FrameworkElement child = BuildElement(children[i]);
 
-        if (gap > 0)
+        if (i > 0 && spacing > 0)
         {
-          element.Margin = panel.Orientation == Orientation.Vertical
-              ? new Thickness(0, 0, 0, gap)
-              : new Thickness(0, 0, gap, 0);
+          Thickness currentMargin = child.Margin;
+
+          child.Margin = panel.Orientation == Orientation.Vertical
+              ? new Thickness(
+                  currentMargin.Left,
+                  currentMargin.Top + spacing,
+                  currentMargin.Right,
+                  currentMargin.Bottom)
+              : new Thickness(
+                  currentMargin.Left + spacing,
+                  currentMargin.Top,
+                  currentMargin.Right,
+                  currentMargin.Bottom);
         }
 
-        panel.Children.Add(element);
+        panel.Children.Add(child);
       }
     }
 
-    string? margin = GetStringOrNumber(props, "margin");
-    if (margin != null)
-      panel.Margin = ParseThickness(margin);
-
-    string? background = GetString(props, "background");
-    if (background != null)
+    // Container untuk padding, margin, dan background
+    var container = new Border
     {
-      return new Border
-      {
-        Background = ParseBrush(background),
-        Child = panel
-      };
+      Child = panel,
+      Padding =
+        ParseOptionalThickness(props, "padding")
+        ?? new Thickness(0),
+
+      Margin =
+        ParseOptionalThickness(props, "margin")
+        ?? new Thickness(0),
+
+      Background = ParseBrush(
+            GetString(props, "background") ?? "Transparent"
+        )
+    };
+
+    // Width
+    double? width = GetNumber(props, "width");
+
+    if (width.HasValue)
+      container.Width = width.Value;
+
+    // Height
+    double? height = GetNumber(props, "height");
+
+    if (height.HasValue)
+      container.Height = height.Value;
+
+    // Enabled
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+
+    if (isEnabled.HasValue)
+      container.IsEnabled = isEnabled.Value;
+
+    // Visibility
+    bool? visible = GetBoolean(props, "visible");
+
+    if (visible.HasValue)
+    {
+      container.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
     }
 
-    return panel;
+    return container;
   }
 
   private FrameworkElement BuildText(JsonElement props)
