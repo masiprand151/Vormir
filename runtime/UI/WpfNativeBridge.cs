@@ -166,6 +166,7 @@ public sealed class WpfNativeBridge
       "Switch" => BuildSwitch(props),
       "Slider" => BuildSlider(props),
       "ProgressBar" => BuildProgressBar(props),
+      "Grid" => BuildGrid(props, children),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
@@ -173,6 +174,116 @@ public sealed class WpfNativeBridge
       }
     };
   }
+
+
+  private FrameworkElement BuildGrid(
+      JsonElement props,
+      JsonElement children)
+  {
+    int columns = (int)(GetNumber(props, "columns") ?? 2);
+    int requestedRows = (int)(GetNumber(props, "rows") ?? 0);
+
+    columns = Math.Max(1, columns);
+
+    int childCount = children.ValueKind == JsonValueKind.Array
+        ? children.GetArrayLength()
+        : 0;
+
+    int requiredRows = Math.Max(
+        1,
+        (int)Math.Ceiling((double)childCount / columns)
+    );
+
+    int rows = Math.Max(requestedRows, requiredRows);
+
+    double spacing = GetNumber(props, "spacing") ?? 0;
+    double rowSpacing = GetNumber(props, "rowSpacing") ?? spacing;
+    double columnSpacing = GetNumber(props, "columnSpacing") ?? spacing;
+
+    var grid = new System.Windows.Controls.Grid();
+
+    for (int i = 0; i < columns; i++)
+    {
+      grid.ColumnDefinitions.Add(
+          new ColumnDefinition
+          {
+            Width = new GridLength(1, GridUnitType.Star)
+          }
+      );
+    }
+
+    for (int i = 0; i < rows; i++)
+    {
+      grid.RowDefinitions.Add(
+          new RowDefinition
+          {
+            Height = new GridLength(1, GridUnitType.Star)
+          }
+      );
+    }
+
+    if (children.ValueKind == JsonValueKind.Array)
+    {
+      int index = 0;
+
+      foreach (JsonElement item in children.EnumerateArray())
+      {
+        FrameworkElement child = BuildElement(item);
+
+        int row = index / columns;
+        int column = index % columns;
+
+        Thickness margin = child.Margin;
+
+        child.Margin = new Thickness(
+            margin.Left,
+            margin.Top,
+            margin.Right + (column < columns - 1 ? columnSpacing : 0),
+            margin.Bottom + (row < rows - 1 ? rowSpacing : 0)
+        );
+
+        System.Windows.Controls.Grid.SetRow(child, row);
+        System.Windows.Controls.Grid.SetColumn(child, column);
+
+        grid.Children.Add(child);
+
+        index++;
+      }
+    }
+
+    var container = new Border
+    {
+      Child = grid,
+      Padding = ParseOptionalThickness(props, "padding") ?? new Thickness(0),
+      Margin = ParseOptionalThickness(props, "margin") ?? new Thickness(0),
+      Background = ParseBrush(
+            GetString(props, "background") ?? "Transparent"
+        )
+    };
+
+    double? width = GetNumber(props, "width");
+    if (width.HasValue)
+      container.Width = width.Value;
+
+    double? height = GetNumber(props, "height");
+    if (height.HasValue)
+      container.Height = height.Value;
+
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+    if (isEnabled.HasValue)
+      container.IsEnabled = isEnabled.Value;
+
+    bool? visible = GetBoolean(props, "visible");
+    if (visible.HasValue)
+    {
+      container.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return container;
+  }
+
 
   // Progress Bar
   private FrameworkElement BuildProgressBar(JsonElement props)

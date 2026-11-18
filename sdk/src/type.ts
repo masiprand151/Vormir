@@ -509,3 +509,12 @@ export interface ProgressBarProps extends BaseProps {
   height?: number;
   cornerRadius?: number;
 }
+
+export interface GridProps extends BaseProps {
+  columns?: number;
+  rows?: number;
+  spacing?: number;
+  rowSpacing?: number;
+  columnSpacing?: number;
+  children?: VNodeChild[];
+}

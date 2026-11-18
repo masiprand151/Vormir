@@ -1,10 +1,10 @@
-import { Window, Stack, Text, ProgressBar, runApp } from "@vormir/sdk";
+import { Window, Stack, Grid, Border, Text, runApp } from "@vormir/sdk";
 
 function Main() {
   return Window({
-    title: "ProgressBar Example",
-    width: 500,
-    height: 350,
+    title: "Grid Example",
+    width: 700,
+    height: 500,
     children: [
       Stack({
         orientation: "vertical",
@@ -12,22 +12,51 @@ function Main() {
         padding: 20,
         children: [
           Text({
-            text: "Download Progress",
-            fontSize: 20,
+            text: "Dashboard",
+            fontSize: 24,
+            fontWeight: "bold",
           }),
 
-          ProgressBar({
-            value: 65,
-            min: 0,
-            max: 100,
-            color: "#2563eb",
-            trackColor: "#e5e7eb",
-            height: 10,
-          }),
+          Grid({
+            columns: 3,
+            spacing: 12,
+            children: [
+              Border({
+                background: "#dbeafe",
+                padding: 20,
+                children: [Text({ text: "Item 1" })],
+              }),
 
-          Text({
-            text: "65%",
-            fontSize: 14,
+              Border({
+                background: "#dcfce7",
+                padding: 20,
+                children: [Text({ text: "Item 2" })],
+              }),
+
+              Border({
+                background: "#fef3c7",
+                padding: 20,
+                children: [Text({ text: "Item 3" })],
+              }),
+
+              Border({
+                background: "#fce7f3",
+                padding: 20,
+                children: [Text({ text: "Item 4" })],
+              }),
+
+              Border({
+                background: "#ede9fe",
+                padding: 20,
+                children: [Text({ text: "Item 5" })],
+              }),
+
+              Border({
+                background: "#cffafe",
+                padding: 20,
+                children: [Text({ text: "Item 6" })],
+              }),
+            ],
           }),
         ],
       }),
