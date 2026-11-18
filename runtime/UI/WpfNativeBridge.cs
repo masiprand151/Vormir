@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Text.Json;
 using System.Windows.Media;
+using System.Windows.Input;
 using System.Windows.Shell;
 using System.Globalization;
 using System.Windows.Shapes;
@@ -168,6 +169,8 @@ public sealed class WpfNativeBridge
       "ProgressBar" => BuildProgressBar(props),
       "Grid" => BuildGrid(props, children),
       "Dropdown" => BuildDropdown(props),
+      "DatePicker" => BuildDatePicker(props),
+      "TimePicker" => BuildTimePicker(props),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
@@ -175,6 +178,327 @@ public sealed class WpfNativeBridge
       }
     };
   }
+
+
+
+  private FrameworkElement BuildTimePicker(JsonElement props)
+  {
+    string? callbackId = GetString(props, "onChange");
+    string? minTime = GetString(props, "minTime");
+    string? maxTime = GetString(props, "maxTime");
+    bool? _visible = GetBoolean(props, "true");
+
+    string placeholder = GetString(props, "placeholder") ?? "Pilih waktu";
+
+    bool IsValidTime(string value)
+    {
+      return DateTime.TryParseExact(
+          value,
+          "HH:mm",
+          System.Globalization.CultureInfo.InvariantCulture,
+          System.Globalization.DateTimeStyles.None,
+          out _
+      );
+    }
+
+    bool IsWithinRange(string value)
+    {
+      if (!IsValidTime(value))
+        return false;
+
+      if (!string.IsNullOrEmpty(minTime) &&
+          IsValidTime(minTime) &&
+          string.CompareOrdinal(value, minTime) < 0)
+        return false;
+
+      if (!string.IsNullOrEmpty(maxTime) &&
+          IsValidTime(maxTime) &&
+          string.CompareOrdinal(value, maxTime) > 0)
+        return false;
+
+      return true;
+    }
+
+    string selectedTime = GetString(props, "value") ?? "";
+
+    if (!IsWithinRange(selectedTime))
+      selectedTime = "00:00";
+
+    var displayText = new TextBlock
+    {
+      Text = IsValidTime(selectedTime) ? selectedTime : placeholder,
+      FontSize = 14,
+      VerticalAlignment = VerticalAlignment.Center,
+      Foreground = ParseBrush("#222222")
+    };
+
+
+
+    var buttonContent = new StackPanel
+    {
+      Orientation = Orientation.Horizontal,
+      HorizontalAlignment = HorizontalAlignment.Stretch
+    };
+
+    buttonContent.Children.Add(displayText);
+
+    var pickerButton = new Button
+    {
+      Content = buttonContent,
+      Width = GetNumber(props, "width") ?? 160,
+      Height = GetNumber(props, "height") ?? 38,
+      Padding = new Thickness(10, 4, 10, 4),
+      Background = Brushes.White,
+      BorderBrush = ParseBrush("#cccccc"),
+      BorderThickness = new Thickness(1),
+      HorizontalContentAlignment = HorizontalAlignment.Stretch,
+      VerticalContentAlignment = VerticalAlignment.Center,
+      Margin = ParseOptionalThickness(props, "margin") ?? new Thickness(0),
+      Cursor = System.Windows.Input.Cursors.Hand
+    };
+
+    var hourList = new ListBox
+    {
+      Width = 65,
+      Height = 180
+    };
+
+    var minuteList = new ListBox
+    {
+      Width = 65,
+      Height = 180
+    };
+
+    for (int i = 0; i < 24; i++)
+      hourList.Items.Add(i.ToString("D2"));
+
+    for (int i = 0; i < 60; i++)
+      minuteList.Items.Add(i.ToString("D2"));
+
+    string[] initialParts = selectedTime.Split(':');
+
+    hourList.SelectedItem = initialParts[0];
+    minuteList.SelectedItem = initialParts[1];
+
+    var preview = new TextBlock
+    {
+      Text = selectedTime,
+      FontSize = 22,
+      FontWeight = FontWeights.SemiBold,
+      HorizontalAlignment = HorizontalAlignment.Center,
+      Margin = new Thickness(0, 0, 0, 10)
+    };
+
+    var okButton = new Button
+    {
+      Content = "OK",
+      Width = 75,
+      Padding = new Thickness(8, 5, 8, 5),
+      Background = ParseBrush("#2563eb"),
+      Foreground = Brushes.White,
+      BorderThickness = new Thickness(0),
+      IsDefault = true
+    };
+
+    var cancelButton = new Button
+    {
+      Content = "Batal",
+      Width = 75,
+      Padding = new Thickness(8, 5, 8, 5),
+      Margin = new Thickness(8, 0, 0, 0)
+    };
+
+    var buttonRow = new StackPanel
+    {
+      Orientation = Orientation.Horizontal,
+      HorizontalAlignment = HorizontalAlignment.Right,
+      Margin = new Thickness(0, 12, 0, 0)
+    };
+    if (_visible == true)
+    {
+
+
+      buttonRow.Children.Add(cancelButton);
+      buttonRow.Children.Add(okButton);
+    }
+
+    var selectionPanel = new StackPanel
+    {
+      Orientation = Orientation.Horizontal,
+      HorizontalAlignment = HorizontalAlignment.Center
+    };
+
+    selectionPanel.Children.Add(hourList);
+    selectionPanel.Children.Add(minuteList);
+
+    var popupContent = new StackPanel
+    {
+      Width = 180,
+      Margin = new Thickness(12)
+    };
+
+    popupContent.Children.Add(preview);
+    popupContent.Children.Add(selectionPanel);
+    popupContent.Children.Add(buttonRow);
+
+    var popup = new System.Windows.Controls.Primitives.Popup
+    {
+      PlacementTarget = pickerButton,
+      Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom,
+      StaysOpen = false,
+      AllowsTransparency = true,
+      Child = new Border
+      {
+        Background = Brushes.White,
+        BorderBrush = ParseBrush("#dddddd"),
+        BorderThickness = new Thickness(1),
+        CornerRadius = new CornerRadius(8),
+        Padding = new Thickness(4),
+        Child = popupContent
+      }
+    };
+
+    string GetSelectedTime()
+    {
+      if (hourList.SelectedItem == null ||
+          minuteList.SelectedItem == null)
+        return "";
+
+      return $"{hourList.SelectedItem}:{minuteList.SelectedItem}";
+    }
+
+    void UpdateSelection()
+    {
+      string time = GetSelectedTime();
+
+      preview.Text = time;
+
+      okButton.IsEnabled = IsWithinRange(time);
+    }
+
+    hourList.SelectionChanged += (sender, args) =>
+        UpdateSelection();
+
+    minuteList.SelectionChanged += (sender, args) =>
+        UpdateSelection();
+
+    UpdateSelection();
+
+    pickerButton.Click += (sender, args) =>
+    {
+      popup.IsOpen = !popup.IsOpen;
+    };
+
+    cancelButton.Click += (sender, args) =>
+    {
+      popup.IsOpen = false;
+    };
+
+    okButton.Click += (sender, args) =>
+    {
+      string time = GetSelectedTime();
+
+      if (!IsWithinRange(time))
+        return;
+
+      selectedTime = time;
+      displayText.Text = time;
+
+      popup.IsOpen = false;
+
+      if (!string.IsNullOrEmpty(callbackId))
+      {
+        _invokeCallbackWithValue?.Invoke(
+            callbackId,
+            selectedTime
+        );
+      }
+    };
+
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+    if (isEnabled.HasValue)
+      pickerButton.IsEnabled = isEnabled.Value;
+
+    bool? visible = GetBoolean(props, "visible");
+    if (visible.HasValue)
+    {
+      pickerButton.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return pickerButton;
+  }
+
+
+  // DatePicker
+  private FrameworkElement BuildDatePicker(JsonElement props)
+  {
+    string? callbackId = GetString(props, "onChange");
+
+    DateTime? ParseDate(string? value)
+    {
+      if (string.IsNullOrWhiteSpace(value))
+        return null;
+
+      if (DateTime.TryParseExact(
+          value,
+          "yyyy-MM-dd",
+          System.Globalization.CultureInfo.InvariantCulture,
+          System.Globalization.DateTimeStyles.None,
+          out DateTime result))
+      {
+        return result;
+      }
+
+      return null;
+    }
+
+    var datePicker = new System.Windows.Controls.DatePicker
+    {
+      Width = GetNumber(props, "width") ?? 180,
+      Height = GetNumber(props, "height") ?? 25,
+      Margin = ParseOptionalThickness(props, "margin") ?? new Thickness(0),
+      SelectedDateFormat = System.Windows.Controls.DatePickerFormat.Short
+    };
+
+    datePicker.SelectedDate = ParseDate(GetString(props, "value"));
+    datePicker.DisplayDateStart = ParseDate(GetString(props, "minDate"));
+    datePicker.DisplayDateEnd = ParseDate(GetString(props, "maxDate"));
+
+    string? placeholder = GetString(props, "placeholder");
+
+    if (!string.IsNullOrEmpty(placeholder))
+      datePicker.ToolTip = placeholder;
+
+    datePicker.SelectedDateChanged += (sender, args) =>
+    {
+      if (!string.IsNullOrEmpty(callbackId))
+      {
+        string value = datePicker.SelectedDate?.ToString(
+            "yyyy-MM-dd",
+            System.Globalization.CultureInfo.InvariantCulture
+        ) ?? "";
+
+        _invokeCallbackWithValue?.Invoke(callbackId, value);
+      }
+    };
+
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+    if (isEnabled.HasValue)
+      datePicker.IsEnabled = isEnabled.Value;
+
+    bool? visible = GetBoolean(props, "visible");
+    if (visible.HasValue)
+    {
+      datePicker.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return datePicker;
+  }
+
 
   // Dropdown
   private FrameworkElement BuildDropdown(JsonElement props)

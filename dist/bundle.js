@@ -172,11 +172,27 @@
   });
 
   // sdk/src/components/Dropdown.ts
-  function Dropdown(props) {
-    return createVNode("Dropdown", props);
-  }
   var init_Dropdown = __esm({
     "sdk/src/components/Dropdown.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/DatePicker.ts
+  var init_DatePicker = __esm({
+    "sdk/src/components/DatePicker.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/TimePicker.ts
+  function TimePicker(props) {
+    return createVNode("TimePicker", props);
+  }
+  var init_TimePicker = __esm({
+    "sdk/src/components/TimePicker.ts"() {
       "use strict";
       init_vnode();
     }
@@ -283,6 +299,8 @@
       init_ProgressBar();
       init_Grid();
       init_Dropdown();
+      init_DatePicker();
+      init_TimePicker();
       init_vnode();
       init_renderer();
     }
@@ -294,7 +312,7 @@
       init_src();
       function Main() {
         return Window({
-          title: "Dropdown Example",
+          title: "TimePicker Example",
           width: 500,
           height: 350,
           children: [
@@ -304,20 +322,18 @@
               padding: 20,
               children: [
                 Text({
-                  text: "Pilih Negara",
+                  text: "Pilih Waktu",
                   fontSize: 20
                 }),
-                Dropdown({
-                  width: 250,
-                  placeholder: "Pilih negara...",
-                  options: [
-                    { label: "Indonesia", value: "id" },
-                    { label: "Malaysia", value: "my" },
-                    { label: "Singapore", value: "sg" },
-                    { label: "Thailand", value: "th" }
-                  ],
+                TimePicker({
+                  width: 200,
+                  value: "14:30",
+                  minTime: "08:00",
+                  maxTime: "22:00",
+                  visible: true,
+                  placeholder: "HH:mm",
                   onChange: (value) => {
-                    console.log("Negara:", value);
+                    console.log("Waktu:", value);
                   }
                 })
               ]

@@ -530,3 +530,20 @@ export interface DropdownProps extends BaseProps {
   placeholder?: string;
   onChange?: (value: string) => void;
 }
+
+export interface DatePickerProps extends BaseProps {
+  value?: string;
+  minDate?: string;
+  maxDate?: string;
+  placeholder?: string;
+  onChange?: (value: string) => void;
+}
+
+export interface TimePickerProps extends BaseProps {
+  value?: string;
+  minTime?: string;
+  maxTime?: string;
+  placeholder?: string;
+  visible?: boolean;
+  onChange?: (value: string) => void;
+}

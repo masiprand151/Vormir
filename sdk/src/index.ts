@@ -19,6 +19,8 @@ export { Slider } from "./components/Slider";
 export { ProgressBar } from "./components/ProgressBar";
 export { Grid } from "./components/Grid";
 export { Dropdown } from "./components/Dropdown";
+export { DatePicker } from "./components/DatePicker";
+export { TimePicker } from "./components/TimePicker";
 
 // Core
 export { createVNode } from "./core/vnode";
@@ -29,6 +31,8 @@ export type {
   Color,
   CheckBoxProps,
   GridProps,
+  TimePickerProps,
+  DatePickerProps,
   DropdownProps,
   Thickness,
   ProgressBarProps,

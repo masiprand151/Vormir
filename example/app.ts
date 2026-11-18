@@ -1,8 +1,8 @@
-import { Window, Stack, Text, Dropdown, runApp } from "@vormir/sdk";
+import { Window, Stack, Text, TimePicker, runApp } from "@vormir/sdk";
 
 function Main() {
   return Window({
-    title: "Dropdown Example",
+    title: "TimePicker Example",
     width: 500,
     height: 350,
     children: [
@@ -12,21 +12,19 @@ function Main() {
         padding: 20,
         children: [
           Text({
-            text: "Pilih Negara",
+            text: "Pilih Waktu",
             fontSize: 20,
           }),
 
-          Dropdown({
-            width: 250,
-            placeholder: "Pilih negara...",
-            options: [
-              { label: "Indonesia", value: "id" },
-              { label: "Malaysia", value: "my" },
-              { label: "Singapore", value: "sg" },
-              { label: "Thailand", value: "th" },
-            ],
+          TimePicker({
+            width: 200,
+            value: "14:30",
+            minTime: "08:00",
+            maxTime: "22:00",
+            visible: true,
+            placeholder: "HH:mm",
             onChange: (value) => {
-              console.log("Negara:", value);
+              console.log("Waktu:", value);
             },
           }),
         ],
