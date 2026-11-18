@@ -140,11 +140,19 @@
   });
 
   // sdk/src/components/Switch.ts
-  function Switch(props) {
-    return createVNode("Switch", props);
-  }
   var init_Switch = __esm({
     "sdk/src/components/Switch.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/Slider.ts
+  function Slider(props) {
+    return createVNode("Slider", props);
+  }
+  var init_Slider = __esm({
+    "sdk/src/components/Slider.ts"() {
       "use strict";
       init_vnode();
     }
@@ -186,6 +194,10 @@
           if (node.type === "CheckBox" && key === "onChange") {
             props[key] = registerCallback((value2) => {
               callback(value2 === "true");
+            });
+          } else if (node.type === "Slider" && key === "onChange") {
+            props[key] = registerCallback((value2) => {
+              callback(Number(value2));
             });
           } else {
             props[key] = registerCallback(callback);
@@ -243,6 +255,7 @@
       init_CheckBox();
       init_RadioButton();
       init_Switch();
+      init_Slider();
       init_vnode();
       init_renderer();
     }
@@ -253,54 +266,30 @@
     "example/app.ts"() {
       init_src();
       function Main() {
+        let volume = 0;
         return Window({
-          title: "Switch Example",
+          title: "Slider Example",
           width: 500,
-          height: 400,
+          height: 350,
           children: [
             Stack({
               orientation: "vertical",
-              spacing: 20,
+              spacing: 15,
               padding: 20,
               children: [
                 Text({
-                  text: "Pengaturan",
-                  fontSize: 24,
-                  fontWeight: "bold"
+                  text: "Volume",
+                  fontSize: 20
                 }),
-                Stack({
-                  orientation: "horizontal",
-                  spacing: 12,
-                  children: [
-                    Text({
-                      text: "Notifikasi",
-                      fontSize: 16
-                    }),
-                    Switch({
-                      checked: true,
-                      color: "#2563eb",
-                      onChange: (value) => {
-                        console.log("Notifikasi:", value);
-                      }
-                    })
-                  ]
-                }),
-                Stack({
-                  orientation: "horizontal",
-                  spacing: 12,
-                  children: [
-                    Text({
-                      text: "Mode gelap",
-                      fontSize: 16
-                    }),
-                    Switch({
-                      checked: false,
-                      color: "#16a34a",
-                      onChange: (value) => {
-                        console.log("Mode gelap:", value);
-                      }
-                    })
-                  ]
+                Slider({
+                  value: volume,
+                  min: 0,
+                  max: 100,
+                  width: 300,
+                  onChange: (value) => {
+                    volume = value;
+                    console.log("Volume:", value);
+                  }
                 })
               ]
             })

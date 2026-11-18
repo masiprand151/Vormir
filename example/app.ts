@@ -1,58 +1,32 @@
-import { Window, Stack, Text, Switch, runApp } from "@vormir/sdk";
+import { Window, Stack, Text, Slider, runApp } from "@vormir/sdk";
 
 function Main() {
+  let volume = 0;
+
   return Window({
-    title: "Switch Example",
+    title: "Slider Example",
     width: 500,
-    height: 400,
+    height: 350,
     children: [
       Stack({
         orientation: "vertical",
-        spacing: 20,
+        spacing: 15,
         padding: 20,
         children: [
           Text({
-            text: "Pengaturan",
-            fontSize: 24,
-            fontWeight: "bold",
+            text: "Volume",
+            fontSize: 20,
           }),
 
-          Stack({
-            orientation: "horizontal",
-            spacing: 12,
-            children: [
-              Text({
-                text: "Notifikasi",
-                fontSize: 16,
-              }),
-
-              Switch({
-                checked: true,
-                color: "#2563eb",
-                onChange: (value) => {
-                  console.log("Notifikasi:", value);
-                },
-              }),
-            ],
-          }),
-
-          Stack({
-            orientation: "horizontal",
-            spacing: 12,
-            children: [
-              Text({
-                text: "Mode gelap",
-                fontSize: 16,
-              }),
-
-              Switch({
-                checked: false,
-                color: "#16a34a",
-                onChange: (value) => {
-                  console.log("Mode gelap:", value);
-                },
-              }),
-            ],
+          Slider({
+            value: volume,
+            min: 0,
+            max: 100,
+            width: 300,
+            onChange: (value) => {
+              volume = value;
+              console.log("Volume:", value);
+            },
           }),
         ],
       }),

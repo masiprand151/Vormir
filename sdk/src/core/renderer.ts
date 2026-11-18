@@ -74,6 +74,10 @@ function serializeVNode(node: VNodeChild): unknown {
           props[key] = registerCallback((value: string) => {
             callback(value === "true");
           });
+        } else if (node.type === "Slider" && key === "onChange") {
+          props[key] = registerCallback((value: string) => {
+            callback(Number(value));
+          });
         } else {
           props[key] = registerCallback(callback);
         }

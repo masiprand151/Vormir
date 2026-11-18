@@ -164,6 +164,7 @@ public sealed class WpfNativeBridge
       "CheckBox" => BuildCheckBox(props),
       "RadioButton" => BuildRadioButton(props),
       "Switch" => BuildSwitch(props),
+      "Slider" => BuildSlider(props),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
@@ -171,6 +172,65 @@ public sealed class WpfNativeBridge
       }
     };
   }
+
+  // Slider
+  private FrameworkElement BuildSlider(JsonElement props)
+  {
+    double min = GetNumber(props, "min") ?? 0;
+    double max = GetNumber(props, "max") ?? 100;
+    double value = GetNumber(props, "value") ?? min;
+
+    if (max < min)
+      max = min;
+
+    value = Math.Clamp(value, min, max);
+
+    string? callbackId = GetString(props, "onChange");
+
+    var slider = new System.Windows.Controls.Slider
+    {
+      Minimum = min,
+      Maximum = max,
+      Value = value,
+      Width = GetNumber(props, "width") ?? 160,
+      Height = GetNumber(props, "height") ?? 30,
+      Margin = ParseOptionalThickness(props, "margin") ?? new Thickness(0),
+      VerticalAlignment = VerticalAlignment.Center
+    };
+
+    string? color = GetString(props, "color");
+
+    if (!string.IsNullOrEmpty(color))
+      slider.Foreground = ParseBrush(color);
+
+    slider.ValueChanged += (sender, args) =>
+    {
+      if (!string.IsNullOrEmpty(callbackId))
+      {
+        _invokeCallbackWithValue?.Invoke(
+            callbackId,
+            slider.Value.ToString(
+                System.Globalization.CultureInfo.InvariantCulture
+            )
+        );
+      }
+    };
+
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+    if (isEnabled.HasValue)
+      slider.IsEnabled = isEnabled.Value;
+
+    bool? visible = GetBoolean(props, "visible");
+    if (visible.HasValue)
+    {
+      slider.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return slider;
+  }
+
 
 
   // Switch

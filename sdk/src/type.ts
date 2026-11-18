@@ -491,3 +491,11 @@ export interface SwitchProps extends BaseProps {
   onChange?: (value: boolean) => void;
   color?: Color;
 }
+
+export interface SliderProps extends BaseProps {
+  value?: number;
+  min?: number;
+  max?: number;
+  onChange?: (value: number) => void;
+  color?: Color;
+}
