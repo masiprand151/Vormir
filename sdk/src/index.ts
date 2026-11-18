@@ -14,6 +14,7 @@ export { Icon } from "./components/Icon";
 export { TextInput } from "./components/TextInput";
 export { CheckBox } from "./components/CheckBox";
 export { RadioButton } from "./components/RadioButton";
+export { Switch } from "./components/Switch";
 
 // Core
 export { createVNode } from "./core/vnode";
@@ -25,6 +26,8 @@ export type {
   CheckBoxProps,
   Thickness,
   TextInputProps,
+  SwitchProps,
+  RadioButtonProps,
   SpacerProps,
   DividerProps,
   WindowPosition,

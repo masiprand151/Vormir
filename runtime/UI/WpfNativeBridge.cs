@@ -163,6 +163,7 @@ public sealed class WpfNativeBridge
       "TextInput" => BuildTextInput(props),
       "CheckBox" => BuildCheckBox(props),
       "RadioButton" => BuildRadioButton(props),
+      "Switch" => BuildSwitch(props),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
@@ -170,6 +171,84 @@ public sealed class WpfNativeBridge
       }
     };
   }
+
+
+  // Switch
+  private FrameworkElement BuildSwitch(JsonElement props)
+  {
+    bool isChecked = GetBoolean(props, "checked") ?? false;
+
+    string activeColor = GetString(props, "color") ?? "#2563eb";
+    string? callbackId = GetString(props, "onChange");
+
+    double width = GetNumber(props, "width") ?? 44;
+    double height = GetNumber(props, "height") ?? 24;
+
+    var thumb = new System.Windows.Shapes.Ellipse
+    {
+      Width = height - 6,
+      Height = height - 6,
+      Fill = Brushes.White,
+      HorizontalAlignment = isChecked
+            ? HorizontalAlignment.Right
+            : HorizontalAlignment.Left,
+      VerticalAlignment = VerticalAlignment.Center,
+      Margin = new Thickness(3)
+    };
+
+    var container = new Border
+    {
+      Width = width,
+      Height = height,
+      CornerRadius = new CornerRadius(height / 2),
+      Background = ParseBrush(isChecked ? activeColor : "#999999"),
+      Margin = ParseOptionalThickness(props, "margin") ?? new Thickness(0),
+      Cursor = System.Windows.Input.Cursors.Hand,
+      Child = new Grid
+      {
+        Children = { thumb }
+      }
+    };
+
+    container.MouseLeftButtonUp += (sender, args) =>
+    {
+      isChecked = !isChecked;
+
+      container.Background = ParseBrush(
+          isChecked ? activeColor : "#999999"
+      );
+
+      thumb.HorizontalAlignment = isChecked
+          ? HorizontalAlignment.Right
+          : HorizontalAlignment.Left;
+
+      if (!string.IsNullOrEmpty(callbackId))
+      {
+        _invokeCallbackWithValue?.Invoke(
+            callbackId,
+            isChecked ? "true" : "false"
+        );
+      }
+
+      args.Handled = true;
+    };
+
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+    if (isEnabled.HasValue)
+      container.IsEnabled = isEnabled.Value;
+
+    bool? visible = GetBoolean(props, "visible");
+    if (visible.HasValue)
+    {
+      container.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return container;
+  }
+
+
 
   // Radio button
   private FrameworkElement BuildRadioButton(JsonElement props)

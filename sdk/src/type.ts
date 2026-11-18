@@ -485,3 +485,9 @@ export interface RadioButtonProps extends BaseProps {
   color?: Color;
   fontSize?: number;
 }
+
+export interface SwitchProps extends BaseProps {
+  checked?: boolean;
+  onChange?: (value: boolean) => void;
+  color?: Color;
+}
