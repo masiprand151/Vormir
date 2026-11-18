@@ -11,7 +11,7 @@
   function createVNode(type, props = {}, children = []) {
     return {
       type,
-      props,
+      props: { ...props },
       children: children.filter(
         (child) => child !== null && child !== void 0 && child !== false
       )
@@ -126,6 +126,17 @@
     }
   });
 
+  // sdk/src/components/CheckBox.ts
+  function CheckBox(props) {
+    return createVNode("CheckBox", props);
+  }
+  var init_CheckBox = __esm({
+    "sdk/src/components/CheckBox.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
   // sdk/src/core/renderer.ts
   function getCallbacks() {
     if (!globalThis.__vormirCallbacks) {
@@ -158,7 +169,14 @@
     for (const [key, value] of Object.entries(node.props ?? {})) {
       if (typeof value === "function") {
         if (key === "onPress" || key === "onClick" || key === "onChange" || key === "onSubmit") {
-          props[key] = registerCallback(value);
+          const callback = value;
+          if (node.type === "CheckBox" && key === "onChange") {
+            props[key] = registerCallback((value2) => {
+              callback(value2 === "true");
+            });
+          } else {
+            props[key] = registerCallback(callback);
+          }
         }
       } else {
         props[key] = value;
@@ -209,6 +227,7 @@
       init_Image();
       init_Icon();
       init_TextInput();
+      init_CheckBox();
       init_vnode();
       init_renderer();
     }
@@ -220,38 +239,45 @@
       init_src();
       function Main() {
         return Window({
-          title: "TextInput Example",
+          title: "CheckBox Example",
           width: 500,
           height: 400,
           children: [
             Stack({
               orientation: "vertical",
-              spacing: 12,
+              spacing: 15,
               padding: 20,
               children: [
                 Text({
-                  text: "Nama pengguna",
-                  fontSize: 16
+                  text: "Pengaturan",
+                  fontSize: 22
                 }),
                 TextInput({
-                  placeholder: "Masukkan nama...",
-                  value: "",
-                  width: 300,
-                  height: 42,
-                  fontSize: 14,
-                  color: "#222222",
-                  background: "#ffffff",
-                  borderColor: "#cccccc",
-                  borderWidth: 1,
-                  borderRadius: 6,
-                  padding: 10,
+                  placeholder: "test",
+                  onChange: (v) => console.log(v)
+                }),
+                CheckBox({
+                  label: "Ingat saya",
+                  checked: true,
                   onChange: (value) => {
-                    console.log("Nama:", value);
+                    console.log("Ingat saya:", value);
                   }
                 }),
-                Text({
-                  text: "Silakan masukkan nama kamu.",
-                  fontSize: 12
+                CheckBox({
+                  label: "Aktifkan notifikasi",
+                  checked: false,
+                  onChange: (value) => {
+                    console.log("Notifikasi:", value);
+                  }
+                }),
+                CheckBox({
+                  label: "Mode gelap",
+                  checked: false,
+                  color: "#2563eb",
+                  fontSize: 16,
+                  onChange: (value) => {
+                    console.log("Mode gelap:", value);
+                  }
                 })
               ]
             })

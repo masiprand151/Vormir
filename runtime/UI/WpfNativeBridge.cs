@@ -161,12 +161,81 @@ public sealed class WpfNativeBridge
       "Image" => BuildImage(props),
       "Icon" => BuildIcon(props),
       "TextInput" => BuildTextInput(props),
+      "CheckBox" => BuildCheckBox(props),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
         Foreground = Brushes.Red
       }
     };
+  }
+
+
+  // checkbok
+
+  private FrameworkElement BuildCheckBox(JsonElement props)
+  {
+    string label = GetString(props, "label") ?? "";
+    string color = GetString(props, "color") ?? "#222222";
+    double fontSize = GetNumber(props, "fontSize") ?? 14;
+
+    bool checkedValue = GetBoolean(props, "checked") ?? false;
+
+    string? callbackId = GetString(props, "onChange");
+    Console.Write(label);
+
+    var labelText = new TextBlock
+    {
+      Text = label,
+      Foreground = ParseBrush(color),
+      FontSize = fontSize,
+      VerticalAlignment = VerticalAlignment.Center
+    };
+
+    var checkBox = new System.Windows.Controls.CheckBox
+    {
+      Content = labelText,
+      IsChecked = checkedValue,
+      IsThreeState = false,
+      VerticalContentAlignment = VerticalAlignment.Center,
+      HorizontalAlignment = HorizontalAlignment.Left,
+      VerticalAlignment = VerticalAlignment.Center,
+      Margin = ParseOptionalThickness(props, "margin") ?? new Thickness(0)
+    };
+
+    checkBox.Checked += (sender, args) =>
+    {
+      if (!string.IsNullOrEmpty(callbackId))
+        _invokeCallbackWithValue?.Invoke(callbackId, "true");
+    };
+
+    checkBox.Unchecked += (sender, args) =>
+    {
+      if (!string.IsNullOrEmpty(callbackId))
+        _invokeCallbackWithValue?.Invoke(callbackId, "false");
+    };
+
+    double? width = GetNumber(props, "width");
+    if (width.HasValue)
+      checkBox.Width = width.Value;
+
+    double? height = GetNumber(props, "height");
+    if (height.HasValue)
+      checkBox.Height = height.Value;
+
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+    if (isEnabled.HasValue)
+      checkBox.IsEnabled = isEnabled.Value;
+
+    bool? visible = GetBoolean(props, "visible");
+    if (visible.HasValue)
+    {
+      checkBox.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return checkBox;
   }
 
 

@@ -467,3 +467,11 @@ export interface TextInputProps extends BaseProps {
   borderWidth?: number;
   borderRadius?: number;
 }
+
+export interface CheckBoxProps extends BaseProps {
+  label?: string;
+  checked?: boolean;
+  onChange?: (value: boolean) => void;
+  color?: Color;
+  fontSize?: number;
+}

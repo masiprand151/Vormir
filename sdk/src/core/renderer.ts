@@ -68,9 +68,18 @@ function serializeVNode(node: VNodeChild): unknown {
         key === "onChange" ||
         key === "onSubmit"
       ) {
-        props[key] = registerCallback(value as VormirCallback);
+        const callback = value as VormirCallback;
+
+        if (node.type === "CheckBox" && key === "onChange") {
+          props[key] = registerCallback((value: string) => {
+            callback(value === "true");
+          });
+        } else {
+          props[key] = registerCallback(callback);
+        }
       }
     } else {
+      // Properti biasa wajib diteruskan!
       props[key] = value;
     }
   }

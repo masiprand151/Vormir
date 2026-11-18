@@ -1,42 +1,50 @@
-import { Window, Stack, Text, TextInput, runApp } from "@vormir/sdk";
+import { Window, Stack, Text, CheckBox, runApp, TextInput } from "@vormir/sdk";
 
 function Main() {
   return Window({
-    title: "TextInput Example",
+    title: "CheckBox Example",
     width: 500,
     height: 400,
     children: [
       Stack({
         orientation: "vertical",
-        spacing: 12,
+        spacing: 15,
         padding: 20,
         children: [
           Text({
-            text: "Nama pengguna",
-            fontSize: 16,
+            text: "Pengaturan",
+            fontSize: 22,
           }),
 
           TextInput({
-            placeholder: "Masukkan nama...",
-            value: "",
-            width: 300,
-            height: 42,
-            fontSize: 14,
-            color: "#222222",
-            background: "#ffffff",
-            borderColor: "#cccccc",
-            borderWidth: 1,
-            borderRadius: 6,
-            padding: 10,
+            placeholder: "test",
+            onChange: (v) => console.log(v),
+          }),
 
+          CheckBox({
+            label: "Ingat saya",
+            checked: true,
             onChange: (value) => {
-              console.log("Nama:", value);
+              console.log("Ingat saya:", value);
             },
           }),
 
-          Text({
-            text: "Silakan masukkan nama kamu.",
-            fontSize: 12,
+          CheckBox({
+            label: "Aktifkan notifikasi",
+            checked: false,
+            onChange: (value) => {
+              console.log("Notifikasi:", value);
+            },
+          }),
+
+          CheckBox({
+            label: "Mode gelap",
+            checked: false,
+            color: "#2563eb",
+            fontSize: 16,
+            onChange: (value) => {
+              console.log("Mode gelap:", value);
+            },
           }),
         ],
       }),

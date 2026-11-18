@@ -12,6 +12,7 @@ export { Divider } from "./components/Divider";
 export { Image } from "./components/Image";
 export { Icon } from "./components/Icon";
 export { TextInput } from "./components/TextInput";
+export { CheckBox } from "./components/CheckBox";
 
 // Core
 export { createVNode } from "./core/vnode";
@@ -20,6 +21,7 @@ export { render, runApp } from "./core/renderer";
 // Types
 export type {
   Color,
+  CheckBoxProps,
   Thickness,
   TextInputProps,
   SpacerProps,

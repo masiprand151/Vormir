@@ -7,7 +7,7 @@ export function createVNode(
 ): VNode {
   return {
     type,
-    props,
+    props: { ...props },
     children: children.filter(
       (child) => child !== null && child !== undefined && child !== false,
     ),
