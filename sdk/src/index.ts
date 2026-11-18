@@ -11,6 +11,7 @@ export { Spacer } from "./components/Spacer";
 export { Divider } from "./components/Divider";
 export { Image } from "./components/Image";
 export { Icon } from "./components/Icon";
+export { TextInput } from "./components/TextInput";
 
 // Core
 export { createVNode } from "./core/vnode";
@@ -20,6 +21,7 @@ export { render, runApp } from "./core/renderer";
 export type {
   Color,
   Thickness,
+  TextInputProps,
   SpacerProps,
   DividerProps,
   WindowPosition,
@@ -37,4 +39,5 @@ export type {
   TextProps,
   ButtonProps,
   BorderProps,
+  Icons,
 } from "./type";

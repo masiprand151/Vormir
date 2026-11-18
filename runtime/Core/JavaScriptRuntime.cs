@@ -7,29 +7,29 @@ namespace Vormir.Core;
 
 public sealed class JavaScriptRuntime
 {
-  private readonly Engine _engine;
+    private readonly Engine _engine;
 
-  public JavaScriptRuntime(
-      Action<string> onLog,
-      Action<string> onRender)
-  {
-    _engine = new Engine(options =>
+    public JavaScriptRuntime(
+        Action<string> onLog,
+        Action<string> onRender)
     {
-      options.ExperimentalFeatures =
-              ExperimentalFeature.TaskInterop;
-    });
+        _engine = new Engine(options =>
+        {
+            options.ExperimentalFeatures =
+                ExperimentalFeature.TaskInterop;
+        });
 
-    _engine.SetValue(
-        "__vormirLog",
-        new Action<string>(onLog)
-    );
+        _engine.SetValue(
+            "__vormirLog",
+            new Action<string>(onLog)
+        );
 
-    _engine.SetValue(
-        "__vormirRender",
-        new Action<string>(onRender)
-    );
+        _engine.SetValue(
+            "__vormirRender",
+            new Action<string>(onRender)
+        );
 
-    _engine.Execute("""
+        _engine.Execute("""
             globalThis.console = {
                 log: (...args) => {
                     __vormirLog(args.map(String).join(" "));
@@ -52,33 +52,42 @@ public sealed class JavaScriptRuntime
                 }
             };
         """);
-  }
-
-  public void ExecuteFile(string filePath)
-  {
-    if (!File.Exists(filePath))
-    {
-      throw new FileNotFoundException(
-          "JavaScript bundle tidak ditemukan.",
-          filePath
-      );
     }
 
-    string source = File.ReadAllText(filePath);
+    public void ExecuteFile(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException(
+                "JavaScript bundle tidak ditemukan.",
+                filePath
+            );
+        }
 
-    _engine.Execute(source);
-  }
+        string source = File.ReadAllText(filePath);
 
-  public void Execute(string source)
-  {
-    _engine.Execute(source);
-  }
+        _engine.Execute(source);
+    }
 
-  public void InvokeCallback(string callbackId)
-  {
-    _engine.Invoke(
-        "__vormirInvokeCallback",
-        callbackId
-    );
-  }
+    public void Execute(string source)
+    {
+        _engine.Execute(source);
+    }
+
+    public void InvokeCallback(string callbackId)
+    {
+        _engine.Invoke(
+            "__vormirInvokeCallback",
+            callbackId
+        );
+    }
+
+    public void InvokeCallback(string callbackId, string value)
+    {
+        _engine.Invoke(
+            "__vormirInvokeCallback",
+            callbackId,
+            value
+        );
+    }
 }

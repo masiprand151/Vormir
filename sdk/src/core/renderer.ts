@@ -1,10 +1,15 @@
-import type { VNode, VNodeChild } from "../type";
+import type { VNodeChild } from "../type";
 
 type VormirCallback = (...args: any[]) => any;
 
 declare global {
   var __vormirCallbacks: Record<string, VormirCallback> | undefined;
+
   var __vormirRender: ((json: string) => void) | undefined;
+
+  var __vormirInvokeCallback:
+    | ((id: string, ...args: any[]) => void)
+    | undefined;
 }
 
 let callbackCounter = 0;
@@ -16,6 +21,15 @@ function getCallbacks(): Record<string, VormirCallback> {
 
   return globalThis.__vormirCallbacks;
 }
+
+// Dipanggil oleh C# Runtime
+globalThis.__vormirInvokeCallback = (id, ...args) => {
+  const callback = globalThis.__vormirCallbacks?.[id];
+
+  if (typeof callback === "function") {
+    callback(...args);
+  }
+};
 
 function registerCallback(callback: VormirCallback): string {
   const id = `vormir_callback_${++callbackCounter}`;

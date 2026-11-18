@@ -76,9 +76,6 @@
   });
 
   // sdk/src/components/ScrollView.ts
-  function ScrollView(props) {
-    return createVNode("ScrollView", props, props.children ?? []);
-  }
   var init_ScrollView = __esm({
     "sdk/src/components/ScrollView.ts"() {
       "use strict";
@@ -95,9 +92,6 @@
   });
 
   // sdk/src/components/Divider.ts
-  function Divider(props = {}) {
-    return createVNode("Divider", props);
-  }
   var init_Divider = __esm({
     "sdk/src/components/Divider.ts"() {
       "use strict";
@@ -114,11 +108,19 @@
   });
 
   // sdk/src/components/Icon.ts
-  function Icon(props) {
-    return createVNode("Icon", props);
-  }
   var init_Icon = __esm({
     "sdk/src/components/Icon.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/TextInput.ts
+  function TextInput(props) {
+    return createVNode("TextInput", props);
+  }
+  var init_TextInput = __esm({
+    "sdk/src/components/TextInput.ts"() {
       "use strict";
       init_vnode();
     }
@@ -183,6 +185,12 @@
     "sdk/src/core/renderer.ts"() {
       "use strict";
       callbackCounter = 0;
+      globalThis.__vormirInvokeCallback = (id, ...args) => {
+        const callback = globalThis.__vormirCallbacks?.[id];
+        if (typeof callback === "function") {
+          callback(...args);
+        }
+      };
     }
   });
 
@@ -200,6 +208,7 @@
       init_Divider();
       init_Image();
       init_Icon();
+      init_TextInput();
       init_vnode();
       init_renderer();
     }
@@ -209,401 +218,40 @@
   var require_app = __commonJS({
     "example/app.ts"() {
       init_src();
-      function IconItem({ name }) {
-        return Stack({
-          orientation: "vertical",
-          spacing: 8,
-          width: 90,
-          padding: 8,
-          children: [
-            Icon({
-              name,
-              size: 28,
-              color: "#2563eb"
-            }),
-            Text({
-              text: name,
-              fontSize: 11
-            })
-          ]
-        });
-      }
-      function IconSection({ title, icons }) {
-        return Stack({
-          orientation: "vertical",
-          spacing: 12,
-          children: [
-            Text({
-              text: title,
-              fontSize: 18,
-              fontWeight: "bold"
-            }),
-            Stack({
-              orientation: "horizontal",
-              spacing: 8,
-              children: icons.map((name) => IconItem({ name }))
-            }),
-            Divider({
-              color: "#dddddd",
-              thickness: 1
-            })
-          ]
-        });
-      }
       function Main() {
         return Window({
-          title: "Vormir - Icon Gallery",
-          width: 900,
-          height: 700,
+          title: "TextInput Example",
+          width: 500,
+          height: 400,
           children: [
-            ScrollView({
-              vertical: true,
+            Stack({
+              orientation: "vertical",
+              spacing: 12,
               padding: 20,
               children: [
-                Stack({
-                  orientation: "vertical",
-                  spacing: 24,
-                  children: [
-                    Text({
-                      text: "Vormir Icon Gallery",
-                      fontSize: 28,
-                      fontWeight: "bold"
-                    }),
-                    IconSection({
-                      title: "Navigation",
-                      icons: [
-                        "home",
-                        "house",
-                        "menu",
-                        "menu-2",
-                        "grid",
-                        "grid-2x2",
-                        "layout",
-                        "sidebar",
-                        "panel-left",
-                        "panel-right",
-                        "maximize",
-                        "minimize",
-                        "expand",
-                        "shrink",
-                        "external-link",
-                        "link",
-                        "link-2",
-                        "compass",
-                        "map"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Arrows",
-                      icons: [
-                        "arrow-up",
-                        "arrow-down",
-                        "arrow-left",
-                        "arrow-right",
-                        "arrow-up-left",
-                        "arrow-up-right",
-                        "arrow-down-left",
-                        "arrow-down-right",
-                        "arrow-left-right",
-                        "arrow-up-down",
-                        "arrow-up-circle",
-                        "arrow-down-circle",
-                        "arrow-left-circle",
-                        "arrow-right-circle",
-                        "chevron-up",
-                        "chevron-down",
-                        "chevron-left",
-                        "chevron-right",
-                        "chevrons-up",
-                        "chevrons-down",
-                        "chevrons-left",
-                        "chevrons-right",
-                        "corner-down-right",
-                        "refresh-cw",
-                        "refresh-ccw",
-                        "repeat"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Actions",
-                      icons: [
-                        "plus",
-                        "minus",
-                        "x",
-                        "check",
-                        "check-circle",
-                        "x-circle",
-                        "plus-circle",
-                        "minus-circle",
-                        "edit",
-                        "edit-2",
-                        "edit-3",
-                        "pencil",
-                        "trash",
-                        "trash-2",
-                        "copy",
-                        "clipboard",
-                        "clipboard-check",
-                        "save",
-                        "download",
-                        "upload",
-                        "share",
-                        "filter",
-                        "search",
-                        "zoom-in",
-                        "zoom-out",
-                        "more-horizontal",
-                        "more-vertical",
-                        "sliders",
-                        "settings",
-                        "tool",
-                        "wrench"
-                      ]
-                    }),
-                    IconSection({
-                      title: "User & People",
-                      icons: [
-                        "user",
-                        "user-round",
-                        "users",
-                        "user-plus",
-                        "user-minus",
-                        "user-check",
-                        "user-x",
-                        "contact",
-                        "id-card"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Communication",
-                      icons: [
-                        "mail",
-                        "message-circle",
-                        "message-square",
-                        "messages-square",
-                        "phone",
-                        "phone-call",
-                        "video",
-                        "video-off",
-                        "bell",
-                        "bell-off",
-                        "send",
-                        "at-sign",
-                        "wifi",
-                        "wifi-off"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Files",
-                      icons: [
-                        "file",
-                        "file-text",
-                        "file-plus",
-                        "file-minus",
-                        "file-check",
-                        "file-x",
-                        "folder",
-                        "folder-open",
-                        "folder-plus",
-                        "folder-check",
-                        "archive",
-                        "book",
-                        "book-open",
-                        "notebook",
-                        "paperclip",
-                        "printer"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Media",
-                      icons: [
-                        "play",
-                        "pause",
-                        "stop",
-                        "skip-back",
-                        "skip-forward",
-                        "rewind",
-                        "fast-forward",
-                        "volume",
-                        "volume-1",
-                        "volume-2",
-                        "volume-x",
-                        "music",
-                        "music-2",
-                        "headphones",
-                        "mic",
-                        "mic-off",
-                        "radio",
-                        "tv",
-                        "monitor",
-                        "smartphone",
-                        "tablet",
-                        "camera",
-                        "image",
-                        "images",
-                        "film",
-                        "clapperboard",
-                        "radio-tower"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Time & Calendar",
-                      icons: [
-                        "clock",
-                        "watch",
-                        "calendar",
-                        "calendar-days",
-                        "calendar-check",
-                        "timer",
-                        "alarm-clock",
-                        "hourglass"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Shopping & Finance",
-                      icons: [
-                        "shopping-cart",
-                        "shopping-bag",
-                        "shopping-basket",
-                        "wallet",
-                        "credit-card",
-                        "banknote",
-                        "receipt",
-                        "receipt-text",
-                        "tag",
-                        "tags",
-                        "gift",
-                        "coins",
-                        "dollar-sign",
-                        "percent",
-                        "trending-up",
-                        "trending-down",
-                        "chart-line",
-                        "chart-bar",
-                        "chart-pie",
-                        "calculator"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Devices",
-                      icons: [
-                        "laptop",
-                        "keyboard",
-                        "mouse",
-                        "printer-check",
-                        "server",
-                        "database",
-                        "hard-drive",
-                        "cpu",
-                        "battery",
-                        "battery-charging",
-                        "bluetooth",
-                        "power"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Location & Transport",
-                      icons: [
-                        "map-pin",
-                        "navigation",
-                        "navigation-2",
-                        "globe",
-                        "car",
-                        "bus",
-                        "bike",
-                        "plane",
-                        "train",
-                        "truck"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Status & Security",
-                      icons: [
-                        "alert-circle",
-                        "alert-triangle",
-                        "alert-octagon",
-                        "info",
-                        "help-circle",
-                        "shield",
-                        "shield-check",
-                        "shield-alert",
-                        "lock",
-                        "unlock",
-                        "key",
-                        "eye",
-                        "eye-off",
-                        "flag"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Weather & Nature",
-                      icons: [
-                        "sun",
-                        "moon",
-                        "cloud",
-                        "cloud-rain",
-                        "cloud-sun",
-                        "cloud-snow",
-                        "umbrella",
-                        "leaf",
-                        "tree",
-                        "flower",
-                        "flame"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Shapes & Design",
-                      icons: [
-                        "circle",
-                        "square",
-                        "rectangle",
-                        "triangle",
-                        "diamond",
-                        "heart",
-                        "star",
-                        "bookmark",
-                        "palette",
-                        "paintbrush",
-                        "brush",
-                        "pen-tool",
-                        "scissors",
-                        "ruler",
-                        "crop",
-                        "move"
-                      ]
-                    }),
-                    IconSection({
-                      title: "Miscellaneous",
-                      icons: [
-                        "activity",
-                        "zap",
-                        "award",
-                        "trophy",
-                        "crown",
-                        "coffee",
-                        "cup-soda",
-                        "utensils",
-                        "pizza",
-                        "cookie",
-                        "package",
-                        "box",
-                        "lamp",
-                        "lightbulb",
-                        "rocket",
-                        "anchor",
-                        "bug",
-                        "puzzle",
-                        "hand",
-                        "thumbs-up",
-                        "thumbs-down",
-                        "smile",
-                        "frown",
-                        "meh",
-                        "heart-handshake",
-                        "sparkles"
-                      ]
-                    })
-                  ]
+                Text({
+                  text: "Nama pengguna",
+                  fontSize: 16
+                }),
+                TextInput({
+                  placeholder: "Masukkan nama...",
+                  value: "",
+                  width: 300,
+                  height: 42,
+                  fontSize: 14,
+                  color: "#222222",
+                  background: "#ffffff",
+                  borderColor: "#cccccc",
+                  borderWidth: 1,
+                  borderRadius: 6,
+                  padding: 10,
+                  onChange: (value) => {
+                    console.log("Nama:", value);
+                  }
+                }),
+                Text({
+                  text: "Silakan masukkan nama kamu.",
+                  fontSize: 12
                 })
               ]
             })

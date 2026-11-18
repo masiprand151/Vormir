@@ -30,12 +30,10 @@ public partial class App : Application
 
 
     var bridge = new WpfNativeBridge(
-        window,
-        callbackId =>
-        {
-          _javascriptRuntime?.InvokeCallback(callbackId);
-        }
-    );
+     window,
+     callbackId => _javascriptRuntime?.InvokeCallback(callbackId),
+     (callbackId, value) => _javascriptRuntime?.InvokeCallback(callbackId, value)
+ );
 
     _javascriptRuntime = new JavaScriptRuntime(
         // JavaScript console.log

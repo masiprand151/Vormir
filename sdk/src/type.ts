@@ -454,3 +454,16 @@ export interface BorderProps extends BaseProps {
   child?: VNodeChild;
   children?: VNodeChild[];
 }
+
+export interface TextInputProps extends BaseProps {
+  value?: string;
+  placeholder?: string;
+  onChange?: (value: string) => void;
+
+  fontSize?: number;
+  color?: Color;
+
+  borderColor?: Color;
+  borderWidth?: number;
+  borderRadius?: number;
+}

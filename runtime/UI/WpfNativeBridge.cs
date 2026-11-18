@@ -18,13 +18,16 @@ public sealed class WpfNativeBridge
 {
   private readonly Window _window;
   private readonly Action<string> _invokeCallback;
+  private readonly Action<string, string>? _invokeCallbackWithValue;
 
   public WpfNativeBridge(
-      Window window,
-      Action<string> invokeCallback)
+    Window window,
+    Action<string> invokeCallback,
+    Action<string, string>? invokeCallbackWithValue = null)
   {
     _window = window;
     _invokeCallback = invokeCallback;
+    _invokeCallbackWithValue = invokeCallbackWithValue;
   }
 
   public void Render(string json)
@@ -157,6 +160,7 @@ public sealed class WpfNativeBridge
       "Divider" => BuildDivider(props),
       "Image" => BuildImage(props),
       "Icon" => BuildIcon(props),
+      "TextInput" => BuildTextInput(props),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
@@ -164,6 +168,105 @@ public sealed class WpfNativeBridge
       }
     };
   }
+
+
+  // Input
+  private FrameworkElement BuildTextInput(JsonElement props)
+  {
+    string value = GetString(props, "value") ?? "";
+    string placeholder = GetString(props, "placeholder") ?? "";
+
+    double fontSize = GetNumber(props, "fontSize") ?? 14;
+    double borderWidth = GetNumber(props, "borderWidth") ?? 1;
+    double borderRadius = GetNumber(props, "borderRadius") ?? 4;
+
+    string color = GetString(props, "color") ?? "#222222";
+    string background = GetString(props, "background") ?? "#ffffff";
+    string borderColor = GetString(props, "borderColor") ?? "#cccccc";
+
+    string? callbackId = GetString(props, "onChange");
+
+    var textBox = new System.Windows.Controls.TextBox
+    {
+      Text = value,
+      FontSize = fontSize,
+      Foreground = ParseBrush(color),
+      Background = Brushes.Transparent,
+      BorderThickness = new Thickness(0),
+      VerticalContentAlignment = VerticalAlignment.Center,
+      HorizontalContentAlignment = HorizontalAlignment.Stretch,
+      Padding = new Thickness(0)
+    };
+
+    var placeholderText = new TextBlock
+    {
+      Text = placeholder,
+      Foreground = ParseBrush("#999999"),
+      FontSize = fontSize,
+      VerticalAlignment = VerticalAlignment.Center,
+      IsHitTestVisible = false
+    };
+
+    var content = new Grid();
+
+    content.Children.Add(textBox);
+    content.Children.Add(placeholderText);
+
+    placeholderText.Visibility =
+        string.IsNullOrEmpty(value)
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+    textBox.TextChanged += (sender, args) =>
+    {
+      placeholderText.Visibility =
+          string.IsNullOrEmpty(textBox.Text)
+              ? Visibility.Visible
+              : Visibility.Collapsed;
+
+      if (!string.IsNullOrEmpty(callbackId))
+      {
+        _invokeCallbackWithValue?.Invoke(
+            callbackId,
+            textBox.Text
+        );
+      }
+    };
+
+    var container = new Border
+    {
+      Child = content,
+      Background = ParseBrush(background),
+      BorderBrush = ParseBrush(borderColor),
+      BorderThickness = new Thickness(borderWidth),
+      CornerRadius = new CornerRadius(borderRadius),
+      Padding = ParseOptionalThickness(props, "padding") ?? new Thickness(8),
+      Margin = ParseOptionalThickness(props, "margin") ?? new Thickness(0)
+    };
+
+    double? width = GetNumber(props, "width");
+    if (width.HasValue)
+      container.Width = width.Value;
+
+    double? height = GetNumber(props, "height");
+    if (height.HasValue)
+      container.Height = height.Value;
+
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+    if (isEnabled.HasValue)
+      container.IsEnabled = isEnabled.Value;
+
+    bool? visible = GetBoolean(props, "visible");
+    if (visible.HasValue)
+    {
+      container.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return container;
+  }
+
   // Icon
   private FrameworkElement BuildIcon(JsonElement props)
   {
