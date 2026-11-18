@@ -414,7 +414,7 @@ export interface ScrollViewProps extends BaseProps {
 
 // Text
 export interface TextProps extends BaseProps {
-  text: string;
+  text?: string;
   fontSize?: number;
   fontWeight?: FontWeight;
   textAlignment?: "left" | "center" | "right";
@@ -424,7 +424,7 @@ export interface TextProps extends BaseProps {
 
 // Button
 export interface ButtonProps extends BaseProps {
-  content: string;
+  text?: string;
   fontSize?: number;
   fontWeight?: FontWeight;
   borderRadius?: number;

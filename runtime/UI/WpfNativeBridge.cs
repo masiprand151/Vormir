@@ -1947,7 +1947,7 @@ public sealed class WpfNativeBridge
   private FrameworkElement BuildButton(JsonElement props)
   {
     string content =
-        GetString(props, "content") ??
+        GetString(props, "text") ??
         GetString(props, "title") ??
         "Button";
 

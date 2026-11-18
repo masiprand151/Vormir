@@ -13,18 +13,15 @@ function App() {
         spacing: 12,
         padding: 20,
         children: [
-          Text({
-            text: `Counter: ${count}`,
+          Text(`Counter: ${count}`, {
             fontSize: 24,
           }),
 
-          Button({
-            content: "Tambah",
+          Button("tambah", {
             onPress: () => setCount((previous) => previous + 1),
           }),
 
-          Button({
-            content: "Reset",
+          Button("reset", {
             onPress: () => setCount(0),
           }),
         ],

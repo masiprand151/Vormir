@@ -49,7 +49,8 @@
   });
 
   // sdk/src/components/Text.ts
-  function Text(props) {
+  function Text(text, props = {}) {
+    props.text = text;
     return createVNode("Text", props);
   }
   var init_Text = __esm({
@@ -60,7 +61,8 @@
   });
 
   // sdk/src/components/Button.ts
-  function Button(props) {
+  function Button(text, props = {}) {
+    props.text = text;
     return createVNode("Button", props);
   }
   var init_Button = __esm({
@@ -373,16 +375,13 @@
               spacing: 12,
               padding: 20,
               children: [
-                Text({
-                  text: `Counter: ${count}`,
+                Text(`Counter: ${count}`, {
                   fontSize: 24
                 }),
-                Button({
-                  content: "Tambah",
+                Button("tambah", {
                   onPress: () => setCount((previous) => previous + 1)
                 }),
-                Button({
-                  content: "Reset",
+                Button("reset", {
                   onPress: () => setCount(0)
                 })
               ]
