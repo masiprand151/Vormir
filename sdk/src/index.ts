@@ -16,6 +16,7 @@ export { CheckBox } from "./components/CheckBox";
 export { RadioButton } from "./components/RadioButton";
 export { Switch } from "./components/Switch";
 export { Slider } from "./components/Slider";
+export { ProgressBar } from "./components/ProgressBar";
 
 // Core
 export { createVNode } from "./core/vnode";
@@ -26,6 +27,7 @@ export type {
   Color,
   CheckBoxProps,
   Thickness,
+  ProgressBarProps,
   SliderProps,
   TextInputProps,
   SwitchProps,

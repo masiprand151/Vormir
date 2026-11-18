@@ -148,11 +148,19 @@
   });
 
   // sdk/src/components/Slider.ts
-  function Slider(props) {
-    return createVNode("Slider", props);
-  }
   var init_Slider = __esm({
     "sdk/src/components/Slider.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/ProgressBar.ts
+  function ProgressBar(props) {
+    return createVNode("ProgressBar", props);
+  }
+  var init_ProgressBar = __esm({
+    "sdk/src/components/ProgressBar.ts"() {
       "use strict";
       init_vnode();
     }
@@ -256,6 +264,7 @@
       init_RadioButton();
       init_Switch();
       init_Slider();
+      init_ProgressBar();
       init_vnode();
       init_renderer();
     }
@@ -266,9 +275,8 @@
     "example/app.ts"() {
       init_src();
       function Main() {
-        let volume = 0;
         return Window({
-          title: "Slider Example",
+          title: "ProgressBar Example",
           width: 500,
           height: 350,
           children: [
@@ -278,18 +286,20 @@
               padding: 20,
               children: [
                 Text({
-                  text: "Volume",
+                  text: "Download Progress",
                   fontSize: 20
                 }),
-                Slider({
-                  value: volume,
+                ProgressBar({
+                  value: 65,
                   min: 0,
                   max: 100,
-                  width: 300,
-                  onChange: (value) => {
-                    volume = value;
-                    console.log("Volume:", value);
-                  }
+                  color: "#2563eb",
+                  trackColor: "#e5e7eb",
+                  height: 10
+                }),
+                Text({
+                  text: "65%",
+                  fontSize: 14
                 })
               ]
             })

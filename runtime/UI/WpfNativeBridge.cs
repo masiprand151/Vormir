@@ -165,6 +165,7 @@ public sealed class WpfNativeBridge
       "RadioButton" => BuildRadioButton(props),
       "Switch" => BuildSwitch(props),
       "Slider" => BuildSlider(props),
+      "ProgressBar" => BuildProgressBar(props),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
@@ -172,6 +173,71 @@ public sealed class WpfNativeBridge
       }
     };
   }
+
+  // Progress Bar
+  private FrameworkElement BuildProgressBar(JsonElement props)
+  {
+    double min = GetNumber(props, "min") ?? 0;
+    double max = GetNumber(props, "max") ?? 100;
+    double value = GetNumber(props, "value") ?? min;
+
+    if (max <= min)
+      max = min + 1;
+
+    value = Math.Clamp(value, min, max);
+
+    double height = GetNumber(props, "height") ?? 8;
+    double radius = GetNumber(props, "cornerRadius") ?? height / 2;
+
+    string trackColor = GetString(props, "trackColor") ?? "#e5e7eb";
+    string color = GetString(props, "color") ?? "#2563eb";
+
+    double percentage = (value - min) / (max - min);
+
+    var progress = new Border
+    {
+      Height = height,
+      Background = ParseBrush(trackColor),
+      CornerRadius = new CornerRadius(radius),
+      ClipToBounds = true,
+      HorizontalAlignment = HorizontalAlignment.Stretch,
+      Margin = ParseOptionalThickness(props, "margin") ?? new Thickness(0)
+    };
+
+    var fill = new Border
+    {
+      Width = 0,
+      Background = ParseBrush(color),
+      CornerRadius = new CornerRadius(radius),
+      HorizontalAlignment = HorizontalAlignment.Left
+    };
+
+    progress.Child = fill;
+
+    progress.SizeChanged += (sender, args) =>
+    {
+      fill.Width = Math.Max(0, progress.ActualWidth * percentage);
+    };
+
+    double? width = GetNumber(props, "width");
+    if (width.HasValue)
+      progress.Width = width.Value;
+
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+    if (isEnabled.HasValue)
+      progress.IsEnabled = isEnabled.Value;
+
+    bool? visible = GetBoolean(props, "visible");
+    if (visible.HasValue)
+    {
+      progress.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return progress;
+  }
+
 
   // Slider
   private FrameworkElement BuildSlider(JsonElement props)

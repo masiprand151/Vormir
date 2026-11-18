@@ -1,10 +1,8 @@
-import { Window, Stack, Text, Slider, runApp } from "@vormir/sdk";
+import { Window, Stack, Text, ProgressBar, runApp } from "@vormir/sdk";
 
 function Main() {
-  let volume = 0;
-
   return Window({
-    title: "Slider Example",
+    title: "ProgressBar Example",
     width: 500,
     height: 350,
     children: [
@@ -14,19 +12,22 @@ function Main() {
         padding: 20,
         children: [
           Text({
-            text: "Volume",
+            text: "Download Progress",
             fontSize: 20,
           }),
 
-          Slider({
-            value: volume,
+          ProgressBar({
+            value: 65,
             min: 0,
             max: 100,
-            width: 300,
-            onChange: (value) => {
-              volume = value;
-              console.log("Volume:", value);
-            },
+            color: "#2563eb",
+            trackColor: "#e5e7eb",
+            height: 10,
+          }),
+
+          Text({
+            text: "65%",
+            fontSize: 14,
           }),
         ],
       }),

@@ -499,3 +499,13 @@ export interface SliderProps extends BaseProps {
   onChange?: (value: number) => void;
   color?: Color;
 }
+
+export interface ProgressBarProps extends BaseProps {
+  value?: number;
+  min?: number;
+  max?: number;
+  color?: Color;
+  trackColor?: Color;
+  height?: number;
+  cornerRadius?: number;
+}
