@@ -13,6 +13,7 @@ export { Image } from "./components/Image";
 export { Icon } from "./components/Icon";
 export { TextInput } from "./components/TextInput";
 export { CheckBox } from "./components/CheckBox";
+export { RadioButton } from "./components/RadioButton";
 
 // Core
 export { createVNode } from "./core/vnode";

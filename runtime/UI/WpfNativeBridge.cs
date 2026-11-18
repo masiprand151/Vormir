@@ -162,6 +162,7 @@ public sealed class WpfNativeBridge
       "Icon" => BuildIcon(props),
       "TextInput" => BuildTextInput(props),
       "CheckBox" => BuildCheckBox(props),
+      "RadioButton" => BuildRadioButton(props),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
@@ -170,9 +171,72 @@ public sealed class WpfNativeBridge
     };
   }
 
+  // Radio button
+  private FrameworkElement BuildRadioButton(JsonElement props)
+  {
+    string label = GetString(props, "label") ?? "";
+    string group = GetString(props, "group") ?? "default";
+    string value = GetString(props, "value") ?? "";
+    string color = GetString(props, "color") ?? "#222222";
+
+    double fontSize = GetNumber(props, "fontSize") ?? 14;
+
+    bool checkedValue = GetBoolean(props, "checked") ?? false;
+
+    string? callbackId = GetString(props, "onChange");
+
+    var labelText = new TextBlock
+    {
+      Text = label,
+      Foreground = ParseBrush(color),
+      FontSize = fontSize,
+      VerticalAlignment = VerticalAlignment.Center
+    };
+
+    var radioButton = new System.Windows.Controls.RadioButton
+    {
+      Content = labelText,
+      GroupName = group,
+      IsChecked = checkedValue,
+      VerticalAlignment = VerticalAlignment.Center,
+      HorizontalAlignment = HorizontalAlignment.Left,
+      Margin = ParseOptionalThickness(props, "margin") ?? new Thickness(0)
+    };
+
+    radioButton.Checked += (sender, args) =>
+    {
+      if (!string.IsNullOrEmpty(callbackId))
+      {
+        _invokeCallbackWithValue?.Invoke(callbackId, value);
+      }
+    };
+
+    double? width = GetNumber(props, "width");
+    if (width.HasValue)
+      radioButton.Width = width.Value;
+
+    double? height = GetNumber(props, "height");
+    if (height.HasValue)
+      radioButton.Height = height.Value;
+
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+    if (isEnabled.HasValue)
+      radioButton.IsEnabled = isEnabled.Value;
+
+    bool? visible = GetBoolean(props, "visible");
+    if (visible.HasValue)
+    {
+      radioButton.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return radioButton;
+  }
+
+
 
   // checkbok
-
   private FrameworkElement BuildCheckBox(JsonElement props)
   {
     string label = GetString(props, "label") ?? "";

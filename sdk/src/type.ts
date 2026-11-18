@@ -475,3 +475,13 @@ export interface CheckBoxProps extends BaseProps {
   color?: Color;
   fontSize?: number;
 }
+
+export interface RadioButtonProps extends BaseProps {
+  label?: string;
+  group: string;
+  value: string;
+  checked?: boolean;
+  onChange?: (value: string) => void;
+  color?: Color;
+  fontSize?: number;
+}

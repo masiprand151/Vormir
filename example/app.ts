@@ -1,49 +1,77 @@
-import { Window, Stack, Text, CheckBox, runApp, TextInput } from "@vormir/sdk";
+import { Window, Stack, Text, RadioButton, Divider, runApp } from "@vormir/sdk";
 
 function Main() {
   return Window({
-    title: "CheckBox Example",
+    title: "RadioButton Example",
     width: 500,
     height: 400,
     children: [
       Stack({
         orientation: "vertical",
-        spacing: 15,
+        spacing: 12,
         padding: 20,
         children: [
           Text({
-            text: "Pengaturan",
-            fontSize: 22,
+            text: "Pilih jenis kelamin",
+            fontSize: 20,
+            fontWeight: "bold",
           }),
 
-          TextInput({
-            placeholder: "test",
-            onChange: (v) => console.log(v),
-          }),
-
-          CheckBox({
-            label: "Ingat saya",
+          RadioButton({
+            label: "Pria",
+            group: "gender",
+            value: "male",
             checked: true,
             onChange: (value) => {
-              console.log("Ingat saya:", value);
+              console.log("Gender:", value);
             },
           }),
 
-          CheckBox({
-            label: "Aktifkan notifikasi",
-            checked: false,
+          RadioButton({
+            label: "Wanita",
+            group: "gender",
+            value: "female",
             onChange: (value) => {
-              console.log("Notifikasi:", value);
+              console.log("Gender:", value);
             },
           }),
 
-          CheckBox({
-            label: "Mode gelap",
-            checked: false,
-            color: "#2563eb",
-            fontSize: 16,
+          Divider({
+            thickness: 1,
+            color: "#dddddd",
+          }),
+
+          Text({
+            text: "Pilih metode pembayaran",
+            fontSize: 20,
+            fontWeight: "bold",
+          }),
+
+          RadioButton({
+            label: "Cash",
+            group: "payment",
+            value: "cash",
+            checked: true,
             onChange: (value) => {
-              console.log("Mode gelap:", value);
+              console.log("Payment:", value);
+            },
+          }),
+
+          RadioButton({
+            label: "Transfer",
+            group: "payment",
+            value: "transfer",
+            onChange: (value) => {
+              console.log("Payment:", value);
+            },
+          }),
+
+          RadioButton({
+            label: "QRIS",
+            group: "payment",
+            value: "qris",
+            onChange: (value) => {
+              console.log("Payment:", value);
             },
           }),
         ],
