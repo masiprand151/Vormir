@@ -9,6 +9,8 @@ export { Border } from "./components/Border";
 export { ScrollView } from "./components/ScrollView";
 export { Spacer } from "./components/Spacer";
 export { Divider } from "./components/Divider";
+export { Image } from "./components/Image";
+export { Icon } from "./components/Icon";
 
 // Core
 export { createVNode } from "./core/vnode";
@@ -25,6 +27,7 @@ export type {
   FontWeight,
   Alignment,
   Orientation,
+  ImageProps,
   VNode,
   VNodeChild,
   VNodeProps,

@@ -19,6 +19,327 @@ export type Alignment = "start" | "center" | "end" | "stretch";
 
 export type Orientation = "vertical" | "horizontal";
 
+export type Icons =
+  // ==========================================
+  // NAVIGATION
+  // ==========================================
+  | "home"
+  | "house"
+  | "menu"
+  | "menu-2"
+  | "grid"
+  | "grid-2x2"
+  | "layout"
+  | "sidebar"
+  | "panel-left"
+  | "panel-right"
+  | "maximize"
+  | "minimize"
+  | "expand"
+  | "shrink"
+  | "external-link"
+  | "link"
+  | "link-2"
+  | "compass"
+  | "map"
+
+  // ==========================================
+  // ARROWS
+  // ==========================================
+  | "arrow-up"
+  | "arrow-down"
+  | "arrow-left"
+  | "arrow-right"
+  | "arrow-up-left"
+  | "arrow-up-right"
+  | "arrow-down-left"
+  | "arrow-down-right"
+  | "arrow-left-right"
+  | "arrow-up-down"
+  | "arrow-up-circle"
+  | "arrow-down-circle"
+  | "arrow-left-circle"
+  | "arrow-right-circle"
+  | "chevron-up"
+  | "chevron-down"
+  | "chevron-left"
+  | "chevron-right"
+  | "chevrons-up"
+  | "chevrons-down"
+  | "chevrons-left"
+  | "chevrons-right"
+  | "corner-down-right"
+  | "refresh-cw"
+  | "refresh-ccw"
+  | "repeat"
+
+  // ==========================================
+  // ACTIONS
+  // ==========================================
+  | "plus"
+  | "minus"
+  | "x"
+  | "check"
+  | "check-circle"
+  | "x-circle"
+  | "plus-circle"
+  | "minus-circle"
+  | "edit"
+  | "edit-2"
+  | "edit-3"
+  | "pencil"
+  | "trash"
+  | "trash-2"
+  | "copy"
+  | "clipboard"
+  | "clipboard-check"
+  | "save"
+  | "download"
+  | "upload"
+  | "share"
+  | "filter"
+  | "search"
+  | "zoom-in"
+  | "zoom-out"
+  | "more-horizontal"
+  | "more-vertical"
+  | "sliders"
+  | "settings"
+  | "tool"
+  | "wrench"
+
+  // ==========================================
+  // USER & PEOPLE
+  // ==========================================
+  | "user"
+  | "user-round"
+  | "users"
+  | "user-plus"
+  | "user-minus"
+  | "user-check"
+  | "user-x"
+  | "contact"
+  | "id-card"
+
+  // ==========================================
+  // COMMUNICATION
+  // ==========================================
+  | "mail"
+  | "message-circle"
+  | "message-square"
+  | "messages-square"
+  | "phone"
+  | "phone-call"
+  | "video"
+  | "video-off"
+  | "bell"
+  | "bell-off"
+  | "send"
+  | "at-sign"
+  | "wifi"
+  | "wifi-off"
+
+  // ==========================================
+  // FILES & DOCUMENTS
+  // ==========================================
+  | "file"
+  | "file-text"
+  | "file-plus"
+  | "file-minus"
+  | "file-check"
+  | "file-x"
+  | "folder"
+  | "folder-open"
+  | "folder-plus"
+  | "folder-check"
+  | "archive"
+  | "book"
+  | "book-open"
+  | "notebook"
+  | "paperclip"
+  | "printer"
+  | "clipboard-check"
+
+  // ==========================================
+  // MEDIA & ENTERTAINMENT
+  // ==========================================
+  | "play"
+  | "pause"
+  | "stop"
+  | "skip-back"
+  | "skip-forward"
+  | "rewind"
+  | "fast-forward"
+  | "volume"
+  | "volume-1"
+  | "volume-2"
+  | "volume-x"
+  | "music"
+  | "music-2"
+  | "headphones"
+  | "mic"
+  | "mic-off"
+  | "radio"
+  | "tv"
+  | "monitor"
+  | "smartphone"
+  | "tablet"
+  | "camera"
+  | "image"
+  | "images"
+  | "film"
+  | "clapperboard"
+  | "radio-tower"
+
+  // ==========================================
+  // TIME & CALENDAR
+  // ==========================================
+  | "clock"
+  | "watch"
+  | "calendar"
+  | "calendar-days"
+  | "calendar-check"
+  | "timer"
+  | "alarm-clock"
+  | "hourglass"
+
+  // ==========================================
+  // SHOPPING & FINANCE
+  // ==========================================
+  | "shopping-cart"
+  | "shopping-bag"
+  | "shopping-basket"
+  | "wallet"
+  | "credit-card"
+  | "banknote"
+  | "receipt"
+  | "receipt-text"
+  | "tag"
+  | "tags"
+  | "gift"
+  | "coins"
+  | "dollar-sign"
+  | "percent"
+  | "trending-up"
+  | "trending-down"
+  | "chart-line"
+  | "chart-bar"
+  | "chart-pie"
+  | "calculator"
+
+  // ==========================================
+  // DEVICES & HARDWARE
+  // ==========================================
+  | "laptop"
+  | "keyboard"
+  | "mouse"
+  | "printer-check"
+  | "server"
+  | "database"
+  | "hard-drive"
+  | "cpu"
+  | "battery"
+  | "battery-charging"
+  | "bluetooth"
+  | "power"
+
+  // ==========================================
+  // LOCATION & TRANSPORT
+  // ==========================================
+  | "map-pin"
+  | "navigation"
+  | "navigation-2"
+  | "globe"
+  | "car"
+  | "bus"
+  | "bike"
+  | "plane"
+  | "train"
+  | "truck"
+
+  // ==========================================
+  // STATUS & ALERTS
+  // ==========================================
+  | "alert-circle"
+  | "alert-triangle"
+  | "alert-octagon"
+  | "info"
+  | "help-circle"
+  | "shield"
+  | "shield-check"
+  | "shield-alert"
+  | "lock"
+  | "unlock"
+  | "key"
+  | "eye"
+  | "eye-off"
+  | "flag"
+
+  // ==========================================
+  // WEATHER & NATURE
+  // ==========================================
+  | "sun"
+  | "moon"
+  | "cloud"
+  | "cloud-rain"
+  | "cloud-sun"
+  | "cloud-snow"
+  | "umbrella"
+  | "leaf"
+  | "tree"
+  | "flower"
+  | "flame"
+
+  // ==========================================
+  // SHAPES & DESIGN
+  // ==========================================
+  | "circle"
+  | "square"
+  | "rectangle"
+  | "triangle"
+  | "diamond"
+  | "heart"
+  | "star"
+  | "bookmark"
+  | "palette"
+  | "paintbrush"
+  | "brush"
+  | "pen-tool"
+  | "scissors"
+  | "ruler"
+  | "crop"
+  | "move"
+
+  // ==========================================
+  // MISCELLANEOUS
+  // ==========================================
+  | "activity"
+  | "zap"
+  | "award"
+  | "trophy"
+  | "crown"
+  | "coffee"
+  | "cup-soda"
+  | "utensils"
+  | "pizza"
+  | "cookie"
+  | "package"
+  | "box"
+  | "lamp"
+  | "lightbulb"
+  | "rocket"
+  | "anchor"
+  | "bug"
+  | "puzzle"
+  | "hand"
+  | "thumbs-up"
+  | "thumbs-down"
+  | "smile"
+  | "frown"
+  | "meh"
+  | "heart-handshake"
+  | "sparkles";
+
 // VNode
 export type VNodeChild = VNode | string | number | boolean | null | undefined;
 
@@ -110,6 +431,19 @@ export interface ButtonProps extends BaseProps {
   borderBrush?: Color;
   borderThickness?: number;
   onPress?: () => void;
+}
+
+// Image
+export interface ImageProps extends BaseProps {
+  source: string;
+  fit?: "contain" | "cover" | "fill" | "none";
+}
+
+// Icon
+export interface IconProps extends BaseProps {
+  name: Icons;
+  size?: number;
+  color?: Color;
 }
 
 // Border
