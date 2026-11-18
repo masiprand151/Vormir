@@ -60,6 +60,9 @@
   });
 
   // sdk/src/components/Button.ts
+  function Button(props) {
+    return createVNode("Button", props);
+  }
   var init_Button = __esm({
     "sdk/src/components/Button.ts"() {
       "use strict";
@@ -188,13 +191,50 @@
   });
 
   // sdk/src/components/TimePicker.ts
-  function TimePicker(props) {
-    return createVNode("TimePicker", props);
-  }
   var init_TimePicker = __esm({
     "sdk/src/components/TimePicker.ts"() {
       "use strict";
       init_vnode();
+    }
+  });
+
+  // sdk/src/core/hooks.ts
+  function beginHooks() {
+    hookIndex = 0;
+    isRendering = true;
+  }
+  function endHooks() {
+    isRendering = false;
+  }
+  function setHookRenderer(callback) {
+    rerenderApp = callback;
+  }
+  function useState(initialValue) {
+    if (!isRendering) {
+      throw new Error("useState must be called while rendering an app.");
+    }
+    const currentIndex = hookIndex++;
+    if (!(currentIndex in hookStates)) {
+      hookStates[currentIndex] = typeof initialValue === "function" ? initialValue() : initialValue;
+    }
+    const setState = (value) => {
+      const previous = hookStates[currentIndex];
+      const next = typeof value === "function" ? value(previous) : value;
+      if (Object.is(previous, next)) {
+        return;
+      }
+      hookStates[currentIndex] = next;
+      rerenderApp?.();
+    };
+    return [hookStates[currentIndex], setState];
+  }
+  var hookStates, hookIndex, isRendering, rerenderApp;
+  var init_hooks = __esm({
+    "sdk/src/core/hooks.ts"() {
+      "use strict";
+      hookStates = [];
+      hookIndex = 0;
+      isRendering = false;
     }
   });
 
@@ -261,12 +301,22 @@
     globalThis.__vormirRender(JSON.stringify(tree));
   }
   function runApp(app) {
-    render(app());
+    const renderApp = () => {
+      beginHooks();
+      try {
+        render(app());
+      } finally {
+        endHooks();
+      }
+    };
+    setHookRenderer(renderApp);
+    renderApp();
   }
   var callbackCounter;
   var init_renderer = __esm({
     "sdk/src/core/renderer.ts"() {
       "use strict";
+      init_hooks();
       callbackCounter = 0;
       globalThis.__vormirInvokeCallback = (id, ...args) => {
         const callback = globalThis.__vormirCallbacks?.[id];
@@ -303,6 +353,7 @@
       init_TimePicker();
       init_vnode();
       init_renderer();
+      init_hooks();
     }
   });
 
@@ -310,38 +361,36 @@
   var require_app = __commonJS({
     "example/app.ts"() {
       init_src();
-      function Main() {
+      function App() {
+        const [count, setCount] = useState(0);
         return Window({
-          title: "TimePicker Example",
+          title: "Vormir State Management",
           width: 500,
           height: 350,
           children: [
             Stack({
               orientation: "vertical",
-              spacing: 15,
+              spacing: 12,
               padding: 20,
               children: [
                 Text({
-                  text: "Pilih Waktu",
-                  fontSize: 20
+                  text: `Counter: ${count}`,
+                  fontSize: 24
                 }),
-                TimePicker({
-                  width: 200,
-                  value: "14:30",
-                  minTime: "08:00",
-                  maxTime: "22:00",
-                  visible: true,
-                  placeholder: "HH:mm",
-                  onChange: (value) => {
-                    console.log("Waktu:", value);
-                  }
+                Button({
+                  content: "Tambah",
+                  onPress: () => setCount((previous) => previous + 1)
+                }),
+                Button({
+                  content: "Reset",
+                  onPress: () => setCount(0)
                 })
               ]
             })
           ]
         });
       }
-      runApp(Main);
+      runApp(App);
     }
   });
   require_app();

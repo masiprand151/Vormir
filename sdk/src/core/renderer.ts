@@ -1,3 +1,4 @@
+import { beginHooks, endHooks, setHookRenderer } from "./hooks";
 import type { VNodeChild } from "../type";
 
 type VormirCallback = (...args: any[]) => any;
@@ -108,5 +109,17 @@ export function render(node: VNodeChild): void {
 }
 
 export function runApp(app: () => VNodeChild): void {
-  render(app());
+  const renderApp = () => {
+    beginHooks();
+
+    try {
+      render(app());
+    } finally {
+      endHooks();
+    }
+  };
+
+  setHookRenderer(renderApp);
+
+  renderApp();
 }

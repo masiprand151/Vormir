@@ -1,31 +1,31 @@
-import { Window, Stack, Text, TimePicker, runApp } from "@vormir/sdk";
+import { Window, Stack, Text, Button, useState, runApp } from "@vormir/sdk";
 
-function Main() {
+function App() {
+  const [count, setCount] = useState(0);
+
   return Window({
-    title: "TimePicker Example",
+    title: "Vormir State Management",
     width: 500,
     height: 350,
     children: [
       Stack({
         orientation: "vertical",
-        spacing: 15,
+        spacing: 12,
         padding: 20,
         children: [
           Text({
-            text: "Pilih Waktu",
-            fontSize: 20,
+            text: `Counter: ${count}`,
+            fontSize: 24,
           }),
 
-          TimePicker({
-            width: 200,
-            value: "14:30",
-            minTime: "08:00",
-            maxTime: "22:00",
-            visible: true,
-            placeholder: "HH:mm",
-            onChange: (value) => {
-              console.log("Waktu:", value);
-            },
+          Button({
+            content: "Tambah",
+            onPress: () => setCount((previous) => previous + 1),
+          }),
+
+          Button({
+            content: "Reset",
+            onPress: () => setCount(0),
           }),
         ],
       }),
@@ -33,4 +33,4 @@ function Main() {
   });
 }
 
-runApp(Main);
+runApp(App);

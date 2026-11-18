@@ -25,6 +25,7 @@ export { TimePicker } from "./components/TimePicker";
 // Core
 export { createVNode } from "./core/vnode";
 export { render, runApp } from "./core/renderer";
+export { useState } from "./core/hooks";
 
 // Types
 export type {
