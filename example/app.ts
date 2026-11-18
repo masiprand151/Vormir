@@ -1,10 +1,10 @@
-import { Window, Stack, Grid, Border, Text, runApp } from "@vormir/sdk";
+import { Window, Stack, Text, Dropdown, runApp } from "@vormir/sdk";
 
 function Main() {
   return Window({
-    title: "Grid Example",
-    width: 700,
-    height: 500,
+    title: "Dropdown Example",
+    width: 500,
+    height: 350,
     children: [
       Stack({
         orientation: "vertical",
@@ -12,51 +12,22 @@ function Main() {
         padding: 20,
         children: [
           Text({
-            text: "Dashboard",
-            fontSize: 24,
-            fontWeight: "bold",
+            text: "Pilih Negara",
+            fontSize: 20,
           }),
 
-          Grid({
-            columns: 3,
-            spacing: 12,
-            children: [
-              Border({
-                background: "#dbeafe",
-                padding: 20,
-                children: [Text({ text: "Item 1" })],
-              }),
-
-              Border({
-                background: "#dcfce7",
-                padding: 20,
-                children: [Text({ text: "Item 2" })],
-              }),
-
-              Border({
-                background: "#fef3c7",
-                padding: 20,
-                children: [Text({ text: "Item 3" })],
-              }),
-
-              Border({
-                background: "#fce7f3",
-                padding: 20,
-                children: [Text({ text: "Item 4" })],
-              }),
-
-              Border({
-                background: "#ede9fe",
-                padding: 20,
-                children: [Text({ text: "Item 5" })],
-              }),
-
-              Border({
-                background: "#cffafe",
-                padding: 20,
-                children: [Text({ text: "Item 6" })],
-              }),
+          Dropdown({
+            width: 250,
+            placeholder: "Pilih negara...",
+            options: [
+              { label: "Indonesia", value: "id" },
+              { label: "Malaysia", value: "my" },
+              { label: "Singapore", value: "sg" },
+              { label: "Thailand", value: "th" },
             ],
+            onChange: (value) => {
+              console.log("Negara:", value);
+            },
           }),
         ],
       }),

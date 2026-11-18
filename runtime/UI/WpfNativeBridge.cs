@@ -167,6 +167,7 @@ public sealed class WpfNativeBridge
       "Slider" => BuildSlider(props),
       "ProgressBar" => BuildProgressBar(props),
       "Grid" => BuildGrid(props, children),
+      "Dropdown" => BuildDropdown(props),
       _ => new TextBlock
       {
         Text = $"Unknown component: {type}",
@@ -174,6 +175,82 @@ public sealed class WpfNativeBridge
       }
     };
   }
+
+  // Dropdown
+  private FrameworkElement BuildDropdown(JsonElement props)
+  {
+    string? selectedValue = GetString(props, "value");
+    string? callbackId = GetString(props, "onChange");
+    string? placeholder = GetString(props, "placeholder");
+
+    var comboBox = new ComboBox
+    {
+      MinWidth = 120,
+      Width = GetNumber(props, "width") ?? 180,
+      Height = GetNumber(props, "height") ?? 32,
+      Margin = ParseOptionalThickness(props, "margin") ?? new Thickness(0),
+      VerticalContentAlignment = VerticalAlignment.Center,
+      SelectedValuePath = "Tag"
+    };
+
+    if (props.TryGetProperty("options", out JsonElement options) &&
+        options.ValueKind == JsonValueKind.Array)
+    {
+      foreach (JsonElement option in options.EnumerateArray())
+      {
+        string label = GetString(option, "label") ?? "";
+        string value = GetString(option, "value") ?? "";
+
+        comboBox.Items.Add(new ComboBoxItem
+        {
+          Content = label,
+          Tag = value
+        });
+      }
+    }
+
+    if (!string.IsNullOrEmpty(selectedValue))
+    {
+      comboBox.SelectedValue = selectedValue;
+    }
+    else if (!string.IsNullOrEmpty(placeholder))
+    {
+      comboBox.IsEditable = true;
+      comboBox.IsReadOnly = true;
+      comboBox.Text = placeholder;
+    }
+
+    comboBox.SelectionChanged += (sender, args) =>
+    {
+      if (comboBox.SelectedItem is ComboBoxItem item)
+      {
+        string value = item.Tag?.ToString() ?? "";
+
+        if (!string.IsNullOrEmpty(callbackId))
+        {
+          _invokeCallbackWithValue?.Invoke(
+              callbackId,
+              value
+          );
+        }
+      }
+    };
+
+    bool? isEnabled = GetBoolean(props, "isEnabled");
+    if (isEnabled.HasValue)
+      comboBox.IsEnabled = isEnabled.Value;
+
+    bool? visible = GetBoolean(props, "visible");
+    if (visible.HasValue)
+    {
+      comboBox.Visibility = visible.Value
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    return comboBox;
+  }
+
 
 
   private FrameworkElement BuildGrid(

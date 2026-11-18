@@ -18,6 +18,7 @@ export { Switch } from "./components/Switch";
 export { Slider } from "./components/Slider";
 export { ProgressBar } from "./components/ProgressBar";
 export { Grid } from "./components/Grid";
+export { Dropdown } from "./components/Dropdown";
 
 // Core
 export { createVNode } from "./core/vnode";
@@ -28,6 +29,7 @@ export type {
   Color,
   CheckBoxProps,
   GridProps,
+  DropdownProps,
   Thickness,
   ProgressBarProps,
   SliderProps,

@@ -518,3 +518,15 @@ export interface GridProps extends BaseProps {
   columnSpacing?: number;
   children?: VNodeChild[];
 }
+
+export interface DropdownOption {
+  label: string;
+  value: string;
+}
+
+export interface DropdownProps extends BaseProps {
+  value?: string;
+  options: DropdownOption[];
+  placeholder?: string;
+  onChange?: (value: string) => void;
+}

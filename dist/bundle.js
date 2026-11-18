@@ -68,9 +68,6 @@
   });
 
   // sdk/src/components/Border.ts
-  function Border(props) {
-    return createVNode("Border", props, props.children ?? []);
-  }
   var init_Border = __esm({
     "sdk/src/components/Border.ts"() {
       "use strict";
@@ -167,11 +164,19 @@
   });
 
   // sdk/src/components/Grid.ts
-  function Grid(props) {
-    return createVNode("Grid", props, props.children ?? []);
-  }
   var init_Grid = __esm({
     "sdk/src/components/Grid.ts"() {
+      "use strict";
+      init_vnode();
+    }
+  });
+
+  // sdk/src/components/Dropdown.ts
+  function Dropdown(props) {
+    return createVNode("Dropdown", props);
+  }
+  var init_Dropdown = __esm({
+    "sdk/src/components/Dropdown.ts"() {
       "use strict";
       init_vnode();
     }
@@ -277,6 +282,7 @@
       init_Slider();
       init_ProgressBar();
       init_Grid();
+      init_Dropdown();
       init_vnode();
       init_renderer();
     }
@@ -288,9 +294,9 @@
       init_src();
       function Main() {
         return Window({
-          title: "Grid Example",
-          width: 700,
-          height: 500,
+          title: "Dropdown Example",
+          width: 500,
+          height: 350,
           children: [
             Stack({
               orientation: "vertical",
@@ -298,45 +304,21 @@
               padding: 20,
               children: [
                 Text({
-                  text: "Dashboard",
-                  fontSize: 24,
-                  fontWeight: "bold"
+                  text: "Pilih Negara",
+                  fontSize: 20
                 }),
-                Grid({
-                  columns: 3,
-                  spacing: 12,
-                  children: [
-                    Border({
-                      background: "#dbeafe",
-                      padding: 20,
-                      children: [Text({ text: "Item 1" })]
-                    }),
-                    Border({
-                      background: "#dcfce7",
-                      padding: 20,
-                      children: [Text({ text: "Item 2" })]
-                    }),
-                    Border({
-                      background: "#fef3c7",
-                      padding: 20,
-                      children: [Text({ text: "Item 3" })]
-                    }),
-                    Border({
-                      background: "#fce7f3",
-                      padding: 20,
-                      children: [Text({ text: "Item 4" })]
-                    }),
-                    Border({
-                      background: "#ede9fe",
-                      padding: 20,
-                      children: [Text({ text: "Item 5" })]
-                    }),
-                    Border({
-                      background: "#cffafe",
-                      padding: 20,
-                      children: [Text({ text: "Item 6" })]
-                    })
-                  ]
+                Dropdown({
+                  width: 250,
+                  placeholder: "Pilih negara...",
+                  options: [
+                    { label: "Indonesia", value: "id" },
+                    { label: "Malaysia", value: "my" },
+                    { label: "Singapore", value: "sg" },
+                    { label: "Thailand", value: "th" }
+                  ],
+                  onChange: (value) => {
+                    console.log("Negara:", value);
+                  }
                 })
               ]
             })
